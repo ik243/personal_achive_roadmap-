@@ -20,10 +20,10 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-8 max-w-lg">
+    <div className="max-w-2xl space-y-6">
       <PageHeader title="Settings" description="Appearance and data." />
 
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader>
           <CardTitle>Theme</CardTitle>
         </CardHeader>
@@ -43,7 +43,7 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader>
           <CardTitle>Data</CardTitle>
         </CardHeader>

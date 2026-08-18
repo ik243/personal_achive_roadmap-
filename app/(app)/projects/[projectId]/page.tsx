@@ -36,23 +36,23 @@ export default function ProjectPage() {
     <div className="space-y-6">
       <ProjectHeader project={project} />
 
-      <Tabs value={view} onValueChange={setView}>
-        <TabsList>
-          <TabsTrigger value="roadmap">Roadmap</TabsTrigger>
-          <TabsTrigger value="manage">Manage</TabsTrigger>
-          <TabsTrigger value="stats">Stats</TabsTrigger>
+      <Tabs value={view} onValueChange={setView} className="space-y-6">
+        <TabsList className="h-10 w-full justify-start sm:w-auto">
+          <TabsTrigger value="roadmap" className="px-4">Roadmap</TabsTrigger>
+          <TabsTrigger value="manage" className="px-4">Manage</TabsTrigger>
+          <TabsTrigger value="stats" className="px-4">Stats</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="roadmap" className="mt-6">
+        <TabsContent value="roadmap" className="mt-0">
           <RoadmapView
             projectId={projectId}
             onSelectStep={setSelectedStepId}
           />
         </TabsContent>
-        <TabsContent value="manage" className="mt-6">
+        <TabsContent value="manage" className="mt-0">
           <ManageView projectId={projectId} onSelectStep={setSelectedStepId} />
         </TabsContent>
-        <TabsContent value="stats" className="mt-6">
+        <TabsContent value="stats" className="mt-0">
           <StatsView projectId={projectId} />
         </TabsContent>
       </Tabs>

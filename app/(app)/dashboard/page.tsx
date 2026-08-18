@@ -74,7 +74,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
+        <Card className="lg:col-span-2 shadow-sm">
           <CardHeader>
             <CardTitle>Active Projects</CardTitle>
           </CardHeader>
@@ -84,7 +84,7 @@ export default function DashboardPage() {
                 key={project.id}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="rounded-xl border p-4 transition-colors hover:bg-muted/40"
+                className="rounded-xl border bg-card p-4 shadow-sm transition-shadow hover:shadow-md"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
@@ -110,7 +110,7 @@ export default function DashboardPage() {
         </Card>
 
         <div className="space-y-6">
-          <Card>
+          <Card className="shadow-sm">
             <CardHeader>
               <CardTitle>Currently Studying</CardTitle>
             </CardHeader>
@@ -136,7 +136,7 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="shadow-sm">
             <CardHeader>
               <CardTitle>Recent Activity</CardTitle>
             </CardHeader>
@@ -159,7 +159,7 @@ export default function DashboardPage() {
       </div>
 
       {studyByProject.length > 0 && (
-        <Card>
+        <Card className="shadow-sm">
           <CardHeader>
             <CardTitle>Study Time by Project</CardTitle>
           </CardHeader>

@@ -53,7 +53,7 @@ export default function ActivityPage() {
       />
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <Card>
+        <Card className="shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Total logged
@@ -65,7 +65,7 @@ export default function ActivityPage() {
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Completed steps
@@ -77,7 +77,7 @@ export default function ActivityPage() {
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="shadow-sm">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               In progress
@@ -91,7 +91,7 @@ export default function ActivityPage() {
         </Card>
       </div>
 
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader>
           <CardTitle>Time by day</CardTitle>
         </CardHeader>
@@ -113,7 +113,7 @@ export default function ActivityPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader>
           <CardTitle>Time log</CardTitle>
         </CardHeader>
@@ -150,7 +150,7 @@ export default function ActivityPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader>
           <CardTitle>Recent progress</CardTitle>
         </CardHeader>

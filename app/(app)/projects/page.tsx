@@ -114,10 +114,15 @@ function ProjectGrid({
 }) {
   return (
     <div>
-      <h2 className="mb-4 text-sm font-medium text-muted-foreground">{title}</h2>
+      <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+        {title}
+      </h2>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {projects.map((project) => (
-          <Card key={project.id} className="group transition-colors hover:bg-muted/30">
+          <Card
+            key={project.id}
+            className="group shadow-sm transition-shadow hover:shadow-md"
+          >
             <CardContent className="p-5">
               <div className="flex items-start justify-between gap-2">
                 <Link href={`/projects/${project.id}`} className="font-medium hover:underline">

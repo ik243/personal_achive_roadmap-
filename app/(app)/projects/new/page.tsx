@@ -27,12 +27,12 @@ export default function NewProjectPage() {
   };
 
   return (
-    <div className="mx-auto max-w-lg">
+    <div className="max-w-lg space-y-6">
       <PageHeader
         title="Create Project"
         description="Start with a title. Structure comes next."
       />
-      <form onSubmit={handleSubmit} className="space-y-4 rounded-xl border bg-card p-6">
+      <form onSubmit={handleSubmit} className="space-y-5 rounded-xl border bg-card p-6 shadow-sm">
         <div className="space-y-2">
           <Label htmlFor="title">Project title</Label>
           <Input
