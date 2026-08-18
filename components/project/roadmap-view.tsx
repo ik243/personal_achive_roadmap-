@@ -1,14 +1,13 @@
 "use client";
 
-import { motion } from "framer-motion";
 import {
   enrichSection,
   getProjectSections,
   getUngroupedSteps,
 } from "@/lib/domain/aggregate";
 import { useAppData } from "@/providers/app-data-provider";
+import { RoadmapChain } from "./roadmap-chain";
 import { RoadmapSection } from "./roadmap-section";
-import { RoadmapStepNode } from "./roadmap-step-node";
 
 export function RoadmapView({
   projectId,
@@ -25,52 +24,29 @@ export function RoadmapView({
 
   if (!hasContent) {
     return (
-      <div className="rounded-xl border border-dashed p-12 text-center text-muted-foreground">
-        This project has no steps yet. Add a step directly or create a section to structure the roadmap.
-      </div>
+      <p className="border border-dashed border-border px-6 py-10 text-center text-sm text-muted-foreground">
+        No steps yet. Add steps or create a section to build your chain.
+      </p>
     );
   }
 
   return (
     <div className="space-y-10">
       {ungrouped.length > 0 && (
-        <section>
-          <h3 className="mb-6 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            Ungrouped
-          </h3>
-          <div className="mx-auto max-w-md space-y-0">
-            {ungrouped.map((step, index) => (
-              <RoadmapStepNode
-                key={step.id}
-                step={step}
-                index={index}
-                isLast={index === ungrouped.length - 1}
-                onSelect={() => onSelectStep(step.id)}
-              />
-            ))}
-          </div>
+        <section className="border-l-2 border-dashed border-border pl-5 sm:pl-6">
+          <h3 className="mb-4 text-sm text-muted-foreground">Ungrouped</h3>
+          <RoadmapChain steps={ungrouped} onSelectStep={onSelectStep} />
         </section>
       )}
 
-      {sections.map((section, sectionIndex) => {
+      {sections.map((section) => {
         const enriched = enrichSection(data, section.id)!;
         return (
-          <motion.div
+          <RoadmapSection
             key={section.id}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: sectionIndex * 0.05 }}
-          >
-            <RoadmapSection
-              section={enriched}
-              onSelectStep={onSelectStep}
-            />
-            {sectionIndex < sections.length - 1 && (
-              <div className="my-8 flex justify-center">
-                <div className="h-8 w-px bg-border" />
-              </div>
-            )}
-          </motion.div>
+            section={enriched}
+            onSelectStep={onSelectStep}
+          />
         );
       })}
     </div>
