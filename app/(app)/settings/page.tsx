@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import type { ThemePreference } from "@/lib/domain/types";
+import { isSupabaseEnabled } from "@/lib/supabase/client";
 import { useAppData } from "@/providers/app-data-provider";
 
 export default function SettingsPage() {
   const { settings, setTheme, resetDemoData, clearAllData } = useAppData();
+  const supabaseSync = isSupabaseEnabled();
   const { setTheme: setNextTheme } = useTheme();
 
   const applyTheme = (theme: ThemePreference) => {
@@ -47,7 +49,9 @@ export default function SettingsPage() {
         </CardHeader>
         <CardContent className="space-y-3">
           <p className="text-sm text-muted-foreground">
-            Data is stored locally in your browser. Connect Supabase to sync across devices.
+            {supabaseSync
+              ? "Cloud sync is active via Supabase. Changes are saved to your database."
+              : "Data is stored locally in your browser. Set Supabase env vars to sync across devices."}
           </p>
           <Button variant="outline" onClick={resetDemoData}>
             Load demo data
