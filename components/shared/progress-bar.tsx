@@ -16,20 +16,20 @@ export function ProgressBar({
   const clamped = Math.max(0, Math.min(100, value));
 
   return (
-    <div className={cn("flex items-center gap-3", className)}>
+    <div className={cn("flex items-center gap-2", className)}>
       <div
         className={cn(
-          "relative w-full overflow-hidden rounded-full bg-muted",
-          size === "sm" ? "h-1.5" : "h-2",
+          "relative w-full bg-border",
+          size === "sm" ? "h-px" : "h-0.5",
         )}
       >
         <div
-          className="h-full rounded-full bg-primary transition-all duration-300 ease-out"
+          className="h-full bg-foreground transition-all duration-200"
           style={{ width: `${clamped}%` }}
         />
       </div>
       {showLabel && (
-        <span className="text-xs font-medium tabular-nums text-muted-foreground">
+        <span className="font-mono text-xs tabular-nums text-muted-foreground">
           {clamped}%
         </span>
       )}

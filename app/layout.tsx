@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Lora } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppDataProvider } from "@/providers/app-data-provider";
@@ -17,6 +17,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const lora = Lora({
+  variable: "--font-serif",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "Roadmap — Personal Learning Progress",
   description: "Personal interactive roadmap and progress tracking for learning goals.",
@@ -24,14 +29,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} h-full`}>
+    <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} ${lora.variable} h-full`}>
       <body className="min-h-full antialiased">
         <ThemeProvider>
           <QueryProvider>
             <AppDataProvider>
               <TooltipProvider>
                 {children}
-                <Toaster richColors closeButton position="bottom-right" />
+                <Toaster closeButton position="bottom-right" />
               </TooltipProvider>
             </AppDataProvider>
           </QueryProvider>

@@ -11,7 +11,7 @@ import { DurationText } from "@/components/shared/duration-text";
 import { TimeByDayChart } from "@/components/shared/time-by-day-chart";
 import { ProgressBar } from "@/components/shared/progress-bar";
 import { StatCard } from "@/components/shared/stat-card";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { NotebookSection } from "@/components/layout/notebook-section";
 import { useAppData } from "@/providers/app-data-provider";
 
 export function StatsView({ projectId }: { projectId: string }) {
@@ -32,7 +32,7 @@ export function StatsView({ projectId }: { projectId: string }) {
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-x-8 sm:grid-cols-2">
         <StatCard label="Progress" value={`${project.metrics.progress}%`} />
         <StatCard
           label="Completed Weight"
@@ -48,30 +48,24 @@ export function StatsView({ projectId }: { projectId: string }) {
         />
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Completion Breakdown</CardTitle>
-        </CardHeader>
-        <CardContent className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 text-sm">
+      <NotebookSection title="Breakdown">
+        <div className="grid gap-2 font-mono text-sm sm:grid-cols-2">
           <div>Completed: {completed}</div>
           <div>In progress: {inProgress}</div>
           <div>Paused: {paused}</div>
           <div>Remaining: {remaining}</div>
-        </CardContent>
-      </Card>
+        </div>
+      </NotebookSection>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>By Section</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <NotebookSection title="By section">
+        <div className="space-y-4">
           {sections.map((section) => {
             const enriched = enrichSection(data, section.id)!;
             return (
               <div key={section.id} className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>{section.title}</span>
-                  <span className="tabular-nums text-muted-foreground">
+                  <span className="font-mono tabular-nums text-muted-foreground">
                     {enriched.metrics.progress}% · {formatDuration(enriched.metrics.totalSpentMinutes)}
                   </span>
                 </div>
@@ -79,17 +73,12 @@ export function StatsView({ projectId }: { projectId: string }) {
               </div>
             );
           })}
-        </CardContent>
-      </Card>
+        </div>
+      </NotebookSection>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Study Time — Last 30 Days</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <TimeByDayChart data={last30} heightClass="h-32" />
-        </CardContent>
-      </Card>
+      <NotebookSection title="Last 30 days">
+        <TimeByDayChart data={last30} heightClass="h-32" />
+      </NotebookSection>
     </div>
   );
 }

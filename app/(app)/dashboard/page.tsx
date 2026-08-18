@@ -1,15 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
+import { NotebookSection } from "@/components/layout/notebook-section";
 import { DurationText } from "@/components/shared/duration-text";
 import { EmptyState } from "@/components/shared/empty-state";
 import { ProgressBar } from "@/components/shared/progress-bar";
 import { StatCard } from "@/components/shared/stat-card";
 import { buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   buildActivityFeed,
   getAllProjectsWithMetrics,
@@ -23,9 +22,13 @@ export default function DashboardPage() {
   const { data, isReady } = useAppData();
 
   if (!isReady) {
-    return <div className="space-y-4">{Array.from({ length: 4 }).map((_, i) => (
-      <div key={i} className="h-24 rounded-xl bg-muted animate-pulse" />
-    ))}</div>;
+    return (
+      <div className="space-y-3">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="h-8 border-b border-border animate-pulse" />
+        ))}
+      </div>
+    );
   }
 
   const global = getGlobalMetrics(data);
@@ -38,13 +41,12 @@ export default function DashboardPage() {
   if (projects.length === 0) {
     return (
       <>
-        <PageHeader title="Dashboard" description="Your learning progress at a glance." />
+        <PageHeader title="Dashboard" />
         <EmptyState
-          title="Your roadmap starts here."
-          description="Create your first goal and begin turning it into measurable progress."
+          title="Nothing here yet."
+          description="Create a project and start logging progress."
           action={
-            <Link href="/projects/new" className={buttonVariants()}>
-              <Plus className="size-4" />
+            <Link href="/projects/new" className={buttonVariants({ variant: "outline" })}>
               Create project
             </Link>
           }
@@ -57,123 +59,97 @@ export default function DashboardPage() {
     <div className="space-y-8">
       <PageHeader
         title="Dashboard"
-        description="You are moving. Here is the evidence."
         actions={
-          <Link href="/projects/new" className={buttonVariants()}>
-            <Plus className="size-4" />
+          <Link href="/projects/new" className={buttonVariants({ variant: "outline", size: "sm" })}>
             New project
           </Link>
         }
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Active Projects" value={String(global.activeProjectCount)} />
-        <StatCard label="Overall Progress" value={`${global.progress}%`} hint={`${global.completedWeight} / ${global.activeWeight} points`} />
-        <StatCard label="Completed Steps" value={String(global.completedStepCount)} hint={`${global.stepCount} total`} />
-        <StatCard label="Total Study Time" value={<DurationText minutes={global.totalSpentMinutes} />} hint={`${formatWeek(weekMinutes)} this week`} />
+      <div className="grid gap-x-8 sm:grid-cols-2">
+        <StatCard label="Projects" value={String(global.activeProjectCount)} />
+        <StatCard label="Progress" value={`${global.progress}%`} hint={`${global.completedWeight}/${global.activeWeight} pts`} />
+        <StatCard label="Steps done" value={String(global.completedStepCount)} hint={`${global.stepCount} total`} />
+        <StatCard
+          label="Study time"
+          value={<DurationText minutes={global.totalSpentMinutes} />}
+          hint={formatWeek(weekMinutes) + " this week"}
+        />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-2 shadow-sm">
-          <CardHeader>
-            <CardTitle>Active Projects</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {projects.map((project) => (
-              <motion.div
-                key={project.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="rounded-xl border bg-card p-4 shadow-sm transition-shadow hover:shadow-md"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <Link
-                      href={`/projects/${project.id}`}
-                      className="font-medium hover:underline"
-                    >
-                      {project.title}
-                    </Link>
-                    <div className="mt-3">
-                      <ProgressBar value={project.metrics.progress} showLabel />
-                    </div>
-                    <div className="mt-2 flex gap-4 text-xs text-muted-foreground tabular-nums">
-                      <span>{project.metrics.completedStepCount} / {project.metrics.stepCount} steps</span>
-                      <span><DurationText minutes={project.metrics.totalSpentMinutes} /></span>
-                    </div>
-                  </div>
-                  <span className="text-sm font-semibold tabular-nums">{project.metrics.progress}%</span>
-                </div>
-              </motion.div>
-            ))}
-          </CardContent>
-        </Card>
-
-        <div className="space-y-6">
-          <Card className="shadow-sm">
-            <CardHeader>
-              <CardTitle>Currently Studying</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {global.inProgressSteps.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No steps in progress.</p>
-              ) : (
-                global.inProgressSteps.slice(0, 5).map((step) => {
-                  const project = data.projects.find((p) => p.id === step.projectId);
-                  const section = step.sectionId
-                    ? data.sections.find((s) => s.id === step.sectionId)
-                    : null;
-                  return (
-                    <div key={step.id} className="text-sm">
-                      <p className="font-medium">{step.title}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {[project?.title, section?.title].filter(Boolean).join(" · ")}
-                      </p>
-                    </div>
-                  );
-                })
-              )}
-            </CardContent>
-          </Card>
-
-          <Card className="shadow-sm">
-            <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {activity.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No recent activity.</p>
-              ) : (
-                activity.map((item) => (
-                  <div key={item.id} className="text-sm">
-                    <p>{item.title}</p>
-                    {item.subtitle && (
-                      <p className="text-xs text-muted-foreground">{item.subtitle}</p>
-                    )}
-                  </div>
-                ))
-              )}
-            </CardContent>
-          </Card>
+      <NotebookSection title="Projects">
+        <div className="space-y-4">
+          {projects.map((project) => (
+            <div key={project.id} className="border-b border-border pb-4 last:border-b-0">
+              <div className="flex items-start justify-between gap-4">
+                <Link href={`/projects/${project.id}`} className="hover:underline">
+                  {project.title}
+                </Link>
+                <span className="font-mono text-sm tabular-nums text-muted-foreground">
+                  {project.metrics.progress}%
+                </span>
+              </div>
+              <div className="mt-2">
+                <ProgressBar value={project.metrics.progress} />
+              </div>
+              <div className="mt-2 flex gap-4 font-mono text-xs text-muted-foreground tabular-nums">
+                <span>{project.metrics.completedStepCount}/{project.metrics.stepCount} steps</span>
+                <span><DurationText minutes={project.metrics.totalSpentMinutes} /></span>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
+      </NotebookSection>
+
+      {global.inProgressSteps.length > 0 && (
+        <NotebookSection title="In progress">
+          <div className="space-y-3">
+            {global.inProgressSteps.slice(0, 5).map((step) => {
+              const project = data.projects.find((p) => p.id === step.projectId);
+              const section = step.sectionId
+                ? data.sections.find((s) => s.id === step.sectionId)
+                : null;
+              return (
+                <div key={step.id} className="text-sm">
+                  <p>{step.title}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {[project?.title, section?.title].filter(Boolean).join(" · ")}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </NotebookSection>
+      )}
+
+      {activity.length > 0 && (
+        <NotebookSection title="Recent">
+          <div className="space-y-2 text-sm">
+            {activity.map((item) => (
+              <div key={item.id}>
+                <p>{item.title}</p>
+                {item.subtitle && (
+                  <p className="text-xs text-muted-foreground">{item.subtitle}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </NotebookSection>
+      )}
 
       {studyByProject.length > 0 && (
-        <Card className="shadow-sm">
-          <CardHeader>
-            <CardTitle>Study Time by Project</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
+        <NotebookSection title="Time by project">
+          <div className="space-y-2 text-sm">
             {studyByProject.map((entry) => (
-              <div key={entry.projectId} className="flex items-center justify-between text-sm">
+              <div key={entry.projectId} className="flex justify-between gap-4">
                 <span>{entry.title}</span>
-                <span className="tabular-nums text-muted-foreground">
+                <span className="font-mono tabular-nums text-muted-foreground">
                   <DurationText minutes={entry.minutes} />
                 </span>
               </div>
             ))}
-          </CardContent>
-        </Card>
+          </div>
+        </NotebookSection>
       )}
     </div>
   );

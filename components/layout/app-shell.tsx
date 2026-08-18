@@ -10,13 +10,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-muted/30">
+    <div className="flex h-screen overflow-hidden bg-background">
       <div className="hidden lg:flex">
         <AppSidebar collapsed={collapsed} onToggle={() => setCollapsed((v) => !v)} />
       </div>
 
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-        <SheetContent side="left" className="w-72 p-0" showCloseButton={false}>
+        <SheetContent side="left" className="w-64 p-0" showCloseButton={false}>
           <AppSidebar
             collapsed={false}
             onToggle={() => setMobileOpen(false)}
@@ -29,8 +29,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <div className="flex min-w-0 flex-1 flex-col">
         <AppTopbar onMenuClick={() => setMobileOpen(true)} />
         <main className="flex-1 overflow-y-auto">
-          <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
-            {children}
+          <div className="mx-auto w-full max-w-3xl px-5 py-8 sm:px-8 sm:py-10">
+            <div className="notebook-page notebook-ruled min-h-[calc(100vh-8rem)] border-l-[3px] border-l-[var(--margin-line)] px-5 py-6 sm:px-8 sm:py-8">
+              {children}
+            </div>
           </div>
         </main>
       </div>

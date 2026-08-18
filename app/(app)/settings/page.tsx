@@ -2,8 +2,8 @@
 
 import { useTheme } from "next-themes";
 import { PageHeader } from "@/components/layout/page-header";
+import { NotebookSection } from "@/components/layout/notebook-section";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import type { ThemePreference } from "@/lib/domain/types";
 import { isSupabaseEnabled } from "@/lib/supabase/client";
@@ -20,47 +20,39 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="max-w-2xl space-y-6">
-      <PageHeader title="Settings" description="Appearance and data." />
+    <div className="space-y-8">
+      <PageHeader title="Settings" />
 
-      <Card className="shadow-sm">
-        <CardHeader>
-          <CardTitle>Theme</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <Label>Appearance</Label>
-          <div className="flex gap-2">
-            {(["light", "dark", "system"] as ThemePreference[]).map((theme) => (
-              <Button
-                key={theme}
-                variant={settings.theme === theme ? "default" : "outline"}
-                onClick={() => applyTheme(theme)}
-              >
-                {theme.charAt(0).toUpperCase() + theme.slice(1)}
-              </Button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <NotebookSection title="Theme">
+        <div className="flex gap-1">
+          {(["light", "dark", "system"] as ThemePreference[]).map((theme) => (
+            <Button
+              key={theme}
+              size="sm"
+              variant={settings.theme === theme ? "default" : "ghost"}
+              onClick={() => applyTheme(theme)}
+            >
+              {theme.charAt(0).toUpperCase() + theme.slice(1)}
+            </Button>
+          ))}
+        </div>
+      </NotebookSection>
 
-      <Card className="shadow-sm">
-        <CardHeader>
-          <CardTitle>Data</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <p className="text-sm text-muted-foreground">
-            {supabaseSync
-              ? "Cloud sync is active via Supabase. Changes are saved to your database."
-              : "Data is stored locally in your browser. Set Supabase env vars to sync across devices."}
-          </p>
-          <Button variant="outline" onClick={resetDemoData}>
+      <NotebookSection title="Data">
+        <p className="mb-4 text-sm text-muted-foreground">
+          {supabaseSync
+            ? "Synced to Supabase."
+            : "Stored locally in your browser."}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" onClick={resetDemoData}>
             Load demo data
           </Button>
-          <Button variant="destructive" onClick={clearAllData}>
-            Clear all data
+          <Button variant="outline" size="sm" onClick={clearAllData}>
+            Clear all
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </NotebookSection>
     </div>
   );
 }

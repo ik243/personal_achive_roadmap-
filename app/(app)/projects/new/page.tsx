@@ -32,7 +32,7 @@ export default function NewProjectPage() {
         title="Create Project"
         description="Start with a title. Structure comes next."
       />
-      <form onSubmit={handleSubmit} className="space-y-5 rounded-xl border bg-card p-6 shadow-sm">
+      <form onSubmit={handleSubmit} className="space-y-4 border border-border p-5">
         <div className="space-y-2">
           <Label htmlFor="title">Project title</Label>
           <Input

@@ -1,4 +1,3 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 interface StatCardProps {
@@ -10,14 +9,10 @@ interface StatCardProps {
 
 export function StatCard({ label, value, hint, className }: StatCardProps) {
   return (
-    <Card className={cn("shadow-sm", className)}>
-      <CardContent className="p-4 sm:p-5">
-        <p className="text-sm font-medium text-muted-foreground">{label}</p>
-        <p className="mt-2 text-2xl font-semibold tracking-tight tabular-nums sm:text-3xl">
-          {value}
-        </p>
-        {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
-      </CardContent>
-    </Card>
+    <div className={cn("border-b border-border py-3 last:border-b-0", className)}>
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="mt-1 font-mono text-lg tabular-nums">{value}</p>
+      {hint && <p className="mt-0.5 text-xs text-muted-foreground">{hint}</p>}
+    </div>
   );
 }

@@ -1,7 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Check } from "lucide-react";
 import type { Step } from "@/lib/domain/types";
 import { StatusDot } from "@/components/shared/status-badge";
 import { cn } from "@/lib/utils";
@@ -23,55 +21,43 @@ export function RoadmapStepNode({
 
   return (
     <div className={cn("relative flex", alignRight ? "justify-end" : "justify-start")}>
-      <div className={cn("relative w-[85%]", alignRight ? "pr-4" : "pl-4")}>
+      <div className={cn("relative w-[90%]", alignRight ? "pr-3" : "pl-3")}>
         {!isLast && (
           <div
             className={cn(
-              "absolute top-8 bottom-0 w-px -translate-x-1/2",
-              alignRight ? "right-6" : "left-6",
-              isCompleted ? "bg-emerald-500/60" : "bg-border",
+              "absolute top-6 bottom-0 w-px",
+              alignRight ? "right-4" : "left-4",
+              "bg-border",
             )}
           />
         )}
 
-        <motion.button
+        <button
           type="button"
           onClick={onSelect}
           className={cn(
-            "group relative flex w-full items-start gap-3 rounded-xl border p-4 text-left transition-colors",
-            step.status === "IN_PROGRESS" && "border-blue-500/40 bg-blue-500/5",
-            isCompleted && "border-emerald-500/30 bg-emerald-500/5",
-            isSkipped && "opacity-60",
-            !isCompleted && step.status !== "IN_PROGRESS" && "hover:bg-muted/50",
+            "flex w-full items-start gap-3 border-b border-border py-3 text-left transition-colors hover:text-foreground",
+            isSkipped && "opacity-50",
+            step.status === "IN_PROGRESS" && "font-medium",
+            isCompleted && "text-muted-foreground",
           )}
-          whileHover={{ y: -1 }}
-          transition={{ duration: 0.15 }}
         >
-          <div className="relative mt-0.5">
+          <div className="mt-1 shrink-0">
             {isCompleted ? (
-              <motion.div
-                initial={{ scale: 0.8 }}
-                animate={{ scale: 1 }}
-                className="flex size-6 items-center justify-center rounded-full bg-emerald-500 text-white"
-              >
-                <Check className="size-3.5" />
-              </motion.div>
+              <span className="font-mono text-xs">✓</span>
             ) : (
               <StatusDot status={step.status} />
             )}
           </div>
           <div className="min-w-0 flex-1">
-            <p
-              className={cn(
-                "font-medium leading-snug",
-                isSkipped && "line-through text-muted-foreground",
-              )}
-            >
+            <p className={cn("leading-snug", isSkipped && "line-through")}>
               {step.title}
             </p>
-            <p className="mt-1 text-xs text-muted-foreground">{step.weight} pts</p>
+            <p className="mt-0.5 font-mono text-xs text-muted-foreground">
+              {step.weight} pts
+            </p>
           </div>
-        </motion.button>
+        </button>
       </div>
     </div>
   );

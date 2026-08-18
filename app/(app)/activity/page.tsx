@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { PageHeader } from "@/components/layout/page-header";
+import { NotebookSection } from "@/components/layout/notebook-section";
 import { DurationText } from "@/components/shared/duration-text";
 import { TimeByDayChart } from "@/components/shared/time-by-day-chart";
+import { StatCard } from "@/components/shared/stat-card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buildActivityFeed, getGlobalMetrics } from "@/lib/domain/aggregate";
 import { groupMinutesByDay } from "@/lib/domain/time";
 import { useAppData } from "@/providers/app-data-provider";
@@ -35,81 +36,39 @@ export default function ActivityPage() {
   return (
     <div className="space-y-8">
       <PageHeader
-        title="Study Activity"
-        description="Time history and progress events."
+        title="Activity"
         actions={
-          <div className="flex gap-2">
+          <div className="flex gap-1">
             {(["7", "30", "all"] as Filter[]).map((f) => (
               <Button
                 key={f}
                 size="sm"
-                variant={filter === f ? "default" : "outline"}
+                variant={filter === f ? "default" : "ghost"}
                 onClick={() => setFilter(f)}
               >
-                {f === "all" ? "All time" : `${f} days`}
+                {f === "all" ? "All" : `${f}d`}
               </Button>
             ))}
           </div>
         }
       />
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        <Card className="shadow-sm">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total logged
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-semibold tabular-nums">
-              <DurationText minutes={global.totalSpentMinutes} />
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Completed steps
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-semibold tabular-nums">
-              {global.completedStepCount}
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              In progress
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-semibold tabular-nums">
-              {global.inProgressStepCount}
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-x-8 sm:grid-cols-3">
+        <StatCard label="Logged" value={<DurationText minutes={global.totalSpentMinutes} />} />
+        <StatCard label="Steps done" value={String(global.completedStepCount)} />
+        <StatCard label="In progress" value={String(global.inProgressStepCount)} />
       </div>
 
-      <Card className="shadow-sm">
-        <CardHeader>
-          <CardTitle>Time by day</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <TimeByDayChart data={chart} heightClass="h-40 sm:h-48" />
-        </CardContent>
-      </Card>
+      <NotebookSection title="Time by day">
+        <TimeByDayChart data={chart} heightClass="h-32 sm:h-40" />
+      </NotebookSection>
 
-      <Card className="shadow-sm">
-        <CardHeader>
-          <CardTitle>Time log</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {filteredLogs.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No time logged in this period.</p>
-          ) : (
-            filteredLogs.map((log) => {
+      <NotebookSection title="Time log">
+        {filteredLogs.length === 0 ? (
+          <p className="text-sm text-muted-foreground">Nothing logged in this period.</p>
+        ) : (
+          <div className="space-y-0">
+            {filteredLogs.map((log) => {
               const step = data.steps.find((s) => s.id === log.stepId);
               const project = step
                 ? data.projects.find((p) => p.id === step.projectId)
@@ -118,14 +77,17 @@ export default function ActivityPage() {
                 ? data.sections.find((s) => s.id === step.sectionId)
                 : null;
               return (
-                <div key={log.id} className="flex justify-between text-sm border-b pb-2 last:border-0">
+                <div
+                  key={log.id}
+                  className="flex justify-between gap-4 border-b border-border py-3 text-sm last:border-b-0"
+                >
                   <div>
-                    <p className="font-medium">{step?.title ?? "Unknown"}</p>
+                    <p>{step?.title ?? "Unknown"}</p>
                     <p className="text-xs text-muted-foreground">
                       {[project?.title, section?.title].filter(Boolean).join(" / ")}
                     </p>
                   </div>
-                  <div className="text-right tabular-nums">
+                  <div className="text-right font-mono tabular-nums">
                     <DurationText minutes={log.durationMinutes} />
                     <p className="text-xs text-muted-foreground">
                       {new Date(log.loggedAt).toLocaleDateString()}
@@ -133,21 +95,20 @@ export default function ActivityPage() {
                   </div>
                 </div>
               );
-            })
-          )}
-        </CardContent>
-      </Card>
+            })}
+          </div>
+        )}
+      </NotebookSection>
 
-      <Card className="shadow-sm">
-        <CardHeader>
-          <CardTitle>Recent progress</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          {activity.map((item) => (
-            <p key={item.id} className="text-sm">{item.title}</p>
-          ))}
-        </CardContent>
-      </Card>
+      {activity.length > 0 && (
+        <NotebookSection title="Progress">
+          <div className="space-y-2 text-sm">
+            {activity.map((item) => (
+              <p key={item.id}>{item.title}</p>
+            ))}
+          </div>
+        </NotebookSection>
+      )}
     </div>
   );
 }

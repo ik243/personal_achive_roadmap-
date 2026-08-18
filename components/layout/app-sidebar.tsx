@@ -2,25 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Activity,
-  ChevronLeft,
-  LayoutDashboard,
-  Map,
-  Settings,
-} from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { useAppData } from "@/providers/app-data-provider";
 import { enrichProject, isProjectComplete } from "@/lib/domain/aggregate";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { ProgressBar } from "@/components/shared/progress-bar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
 
 const mainNav = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/projects", label: "Projects", icon: Map },
-  { href: "/activity", label: "Activity", icon: Activity },
+  { href: "/dashboard", label: "Dashboard" },
+  { href: "/projects", label: "Projects" },
+  { href: "/activity", label: "Activity" },
 ];
 
 export function AppSidebar({
@@ -44,33 +36,30 @@ export function AppSidebar({
   const activeProjects = projects.filter((p) => !isProjectComplete(p.metrics));
   const completedProjects = projects.filter((p) => isProjectComplete(p.metrics));
 
-  const navLinkClass = (active: boolean) =>
+  const linkClass = (active: boolean) =>
     cn(
-      "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+      "block py-1.5 text-sm transition-colors",
       active
-        ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm"
-        : "text-muted-foreground hover:bg-sidebar-accent/70 hover:text-sidebar-accent-foreground",
+        ? "font-medium text-foreground"
+        : "text-muted-foreground hover:text-foreground",
     );
 
   return (
     <aside
       className={cn(
-        "flex h-full flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-[width] duration-200",
-        collapsed ? "w-[72px]" : "w-64",
+        "flex h-full flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-[width] duration-150",
+        collapsed ? "w-14" : "w-52",
         className,
       )}
     >
-      <div className="flex h-14 items-center justify-between gap-2 px-3">
+      <div className="flex h-12 items-center justify-between px-3">
         {!collapsed && (
           <Link
             href="/dashboard"
             onClick={onNavigate}
-            className="flex items-center gap-2 font-semibold tracking-tight"
+            className="font-heading text-base font-medium"
           >
-            <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-xs font-bold text-primary-foreground">
-              R
-            </span>
-            <span>Roadmap</span>
+            Roadmap
           </Link>
         )}
         <Button
@@ -81,13 +70,13 @@ export function AppSidebar({
           className="shrink-0"
         >
           <ChevronLeft
-            className={cn("size-4 transition-transform", collapsed && "rotate-180")}
+            className={cn("size-4", collapsed && "rotate-180")}
           />
         </Button>
       </div>
 
-      <ScrollArea className="flex-1 px-2">
-        <nav className="space-y-1">
+      <ScrollArea className="flex-1 px-3">
+        <nav className="space-y-0.5">
           {mainNav.map((item) => {
             const active =
               pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -96,99 +85,68 @@ export function AppSidebar({
                 key={item.href}
                 href={item.href}
                 onClick={onNavigate}
-                className={navLinkClass(active)}
+                className={linkClass(active)}
               >
-                <item.icon className="size-4 shrink-0" />
-                {!collapsed && <span>{item.label}</span>}
+                {!collapsed ? item.label : item.label.charAt(0)}
               </Link>
             );
           })}
         </nav>
 
-        {!collapsed && (
-          <>
-            <Separator className="my-4" />
-            <p className="px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Projects
-            </p>
-            <div className="mt-2 space-y-4">
-              {activeProjects.length > 0 && (
-                <div className="space-y-1">
-                  {activeProjects.map((project) => {
-                    const href = `/projects/${project.id}`;
-                    const active = pathname.startsWith(href);
-                    return (
-                      <Link
-                        key={project.id}
-                        href={href}
-                        onClick={onNavigate}
-                        className={cn(
-                          "block rounded-lg px-3 py-2.5 transition-colors",
-                          active
-                            ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm"
-                            : "text-muted-foreground hover:bg-sidebar-accent/70",
-                        )}
-                      >
-                        <span className="line-clamp-2 text-sm font-medium leading-snug">
-                          {project.title}
-                        </span>
-                        <div className="mt-2 flex items-center gap-2">
-                          <ProgressBar
-                            value={project.metrics.progress}
-                            size="sm"
-                            className="flex-1"
-                          />
-                          <span className="text-xs tabular-nums text-muted-foreground">
-                            {project.metrics.progress}%
-                          </span>
-                        </div>
-                      </Link>
-                    );
-                  })}
-                </div>
-              )}
+        {!collapsed && projects.length > 0 && (
+          <div className="mt-6 border-t border-sidebar-border pt-4">
+            <p className="mb-2 text-xs text-muted-foreground">Projects</p>
+            <div className="space-y-2">
+              {activeProjects.map((project) => {
+                const href = `/projects/${project.id}`;
+                const active = pathname.startsWith(href);
+                return (
+                  <Link
+                    key={project.id}
+                    href={href}
+                    onClick={onNavigate}
+                    className={cn(linkClass(active), "line-clamp-2 leading-snug")}
+                  >
+                    {project.title}
+                    <span className="ml-1 tabular-nums text-muted-foreground">
+                      {project.metrics.progress}%
+                    </span>
+                  </Link>
+                );
+              })}
               {completedProjects.length > 0 && (
-                <div className="space-y-1">
-                  <p className="px-3 text-xs font-medium text-muted-foreground">
-                    Completed
-                  </p>
+                <>
+                  <p className="pt-2 text-xs text-muted-foreground">Done</p>
                   {completedProjects.map((project) => {
                     const href = `/projects/${project.id}`;
-                    const active = pathname.startsWith(href);
                     return (
                       <Link
                         key={project.id}
                         href={href}
                         onClick={onNavigate}
                         className={cn(
-                          "block rounded-lg px-3 py-2 text-sm transition-colors",
-                          active
-                            ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                            : "text-muted-foreground hover:bg-sidebar-accent/70",
+                          linkClass(pathname.startsWith(href)),
+                          "line-clamp-2 leading-snug",
                         )}
                       >
-                        <span className="line-clamp-2 leading-snug">{project.title}</span>
+                        {project.title}
                       </Link>
                     );
                   })}
-                </div>
-              )}
-              {projects.length === 0 && (
-                <p className="px-3 text-xs text-muted-foreground">No projects yet.</p>
+                </>
               )}
             </div>
-          </>
+          </div>
         )}
       </ScrollArea>
 
-      <div className="border-t border-sidebar-border p-2">
+      <div className="border-t border-sidebar-border px-3 py-3">
         <Link
           href="/settings"
           onClick={onNavigate}
-          className={navLinkClass(pathname === "/settings")}
+          className={linkClass(pathname === "/settings")}
         >
-          <Settings className="size-4 shrink-0" />
-          {!collapsed && <span>Settings</span>}
+          {!collapsed ? "Settings" : "S"}
         </Link>
       </div>
     </aside>

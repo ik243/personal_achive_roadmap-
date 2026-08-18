@@ -18,7 +18,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { buttonVariants, Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { NotebookSection } from "@/components/layout/notebook-section";
 import {
   getAllProjectsWithMetrics,
   isProjectComplete,
@@ -113,42 +113,37 @@ function ProjectGrid({
   onDelete: (id: string) => void;
 }) {
   return (
-    <div>
-      <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-        {title}
-      </h2>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <NotebookSection title={title}>
+      <div className="space-y-4">
         {projects.map((project) => (
-          <Card
+          <div
             key={project.id}
-            className="group shadow-sm transition-shadow hover:shadow-md"
+            className="group border-b border-border pb-4 last:border-b-0"
           >
-            <CardContent className="p-5">
-              <div className="flex items-start justify-between gap-2">
-                <Link href={`/projects/${project.id}`} className="font-medium hover:underline">
-                  {project.title}
-                </Link>
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  className="opacity-0 group-hover:opacity-100"
-                  onClick={() => onDelete(project.id)}
-                  aria-label="Delete project"
-                >
-                  <Trash2 className="size-4" />
-                </Button>
-              </div>
-              <div className="mt-4">
-                <ProgressBar value={project.metrics.progress} showLabel />
-              </div>
-              <div className="mt-3 flex justify-between text-xs text-muted-foreground tabular-nums">
-                <span>{project.metrics.completedStepCount} / {project.metrics.stepCount} steps</span>
-                <DurationText minutes={project.metrics.totalSpentMinutes} />
-              </div>
-            </CardContent>
-          </Card>
+            <div className="flex items-start justify-between gap-2">
+              <Link href={`/projects/${project.id}`} className="hover:underline">
+                {project.title}
+              </Link>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                className="opacity-0 group-hover:opacity-100 shrink-0"
+                onClick={() => onDelete(project.id)}
+                aria-label="Delete project"
+              >
+                <Trash2 className="size-3.5" />
+              </Button>
+            </div>
+            <div className="mt-3">
+              <ProgressBar value={project.metrics.progress} showLabel />
+            </div>
+            <div className="mt-2 flex justify-between font-mono text-xs text-muted-foreground tabular-nums">
+              <span>{project.metrics.completedStepCount}/{project.metrics.stepCount} steps</span>
+              <DurationText minutes={project.metrics.totalSpentMinutes} />
+            </div>
+          </div>
         ))}
       </div>
-    </div>
+    </NotebookSection>
   );
 }

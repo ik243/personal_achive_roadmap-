@@ -36,7 +36,7 @@ export function TimeByDayChart({
           >
             <div className="flex min-h-0 w-full flex-1 items-end justify-center">
               <div
-                className="w-full max-w-8 rounded-t bg-primary/90 transition-all hover:bg-primary"
+                className="w-full max-w-6 bg-foreground"
                 style={{
                   height: `${barHeight}%`,
                   minHeight: day.minutes > 0 ? "4px" : "0",
