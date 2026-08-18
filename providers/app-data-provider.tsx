@@ -155,10 +155,11 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
   }, [settings]);
 
   const resetDemoData = useCallback(() => {
-    const demo = createDemoData();
-    resetAppData(demo);
-    setData(demo);
-    void syncToSupabase(demo);
+    const curriculum = createDemoData();
+    resetAppData(curriculum);
+    setData(curriculum);
+    void syncToSupabase(curriculum);
+    toast.success("Curriculum loaded: RabbitMQ, Redis, System Design.");
   }, [syncToSupabase]);
 
   const clearAllData = useCallback(() => {

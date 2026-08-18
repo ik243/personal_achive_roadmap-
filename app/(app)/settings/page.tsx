@@ -46,7 +46,7 @@ export default function SettingsPage() {
         </p>
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={resetDemoData}>
-            Load demo data
+            Load curriculum
           </Button>
           <Button variant="outline" size="sm" onClick={clearAllData}>
             Clear all

@@ -1,0 +1,130 @@
+Що таке System Design і які цілі він вирішує
+Functional vs Non-Functional Requirements
+Як збирати constraints перед дизайном
+Capacity estimation: users, RPS/QPS, storage, bandwidth
+Latency vs Throughput
+Vertical vs Horizontal Scaling
+Stateless vs Stateful services
+Load Balancing
+Reverse Proxy
+API Gateway
+CDN
+Caching
+Cache-aside / write-through / write-behind
+Cache invalidation
+Database choice: SQL vs NoSQL
+Database normalization vs denormalization
+Indexes
+Read replicas
+Replication
+Partitioning
+Sharding
+Consistent Hashing
+CAP Theorem
+PACELC — базове розуміння
+Strong vs Eventual Consistency
+ACID vs BASE
+Transactions у distributed systems
+Optimistic vs Pessimistic Locking
+Idempotency
+Message Queues
+Pub/Sub
+Sync vs Async communication
+RabbitMQ vs Kafka — концептуально
+Event-driven architecture
+Eventual consistency через events
+Retry
+Exponential Backoff + Jitter
+Timeout
+Circuit Breaker
+Bulkhead
+Rate Limiting
+Token Bucket
+Leaky Bucket
+Sliding Window
+Distributed Locks
+Leader Election — концептуально
+Service Discovery
+Health Checks
+Heartbeat
+Failover
+High Availability
+Fault Tolerance
+Redundancy
+Single Point of Failure
+Graceful Degradation
+Backpressure
+Data duplication
+Data ownership між сервісами
+Database per service
+Saga Pattern
+Outbox Pattern
+Inbox Pattern
+Two-Phase Commit — розуміти, чому часто не хочемо
+Exactly-once vs At-least-once vs At-most-once delivery
+Ordering guarantees
+Deduplication
+Event versioning
+API versioning
+REST vs gRPC vs WebSocket vs SSE
+Monolith vs Modular Monolith vs Microservices
+Service boundaries
+Coupling vs Cohesion
+Domain boundaries
+Bounded Context — базово
+CQRS — коли доречно
+Event Sourcing — базово
+File/Object Storage
+S3-style storage
+Blob storage vs database storage
+Search systems — Elasticsearch/OpenSearch концептуально
+Full-text search
+Background jobs
+Schedulers / Cron
+Distributed Scheduler
+Session storage
+Authentication architecture
+Authorization architecture
+JWT vs Session-based auth
+OAuth/OIDC — high-level
+Security basics у system design
+TLS/HTTPS
+Secrets management
+Network isolation
+Rate limiting як security layer
+Observability
+Logging
+Metrics
+Distributed Tracing
+Correlation IDs
+SLA / SLO / SLI
+Error Budget
+Monitoring critical paths
+Bottlenecks
+Hotspots / Hot Keys
+Thundering Herd / Cache Stampede
+N+1 problem
+Connection Pooling
+Database connection limits
+Queue depth
+Dead Letter Queue
+Poison Messages
+Data retention
+Backup
+Restore
+Disaster Recovery
+RPO / RTO
+Multi-region basics
+Active-Passive vs Active-Active
+Geo-replication — базово
+Deployment topology
+Blue-Green / Canary — концептуально
+Zero-downtime deployment
+Zero-downtime migrations
+Trade-offs у System Design
+Cost vs Performance
+Consistency vs Availability
+Latency vs Durability
+Simplicity vs Scalability
+Security vs Usability
+Як пояснювати і захищати system design рішення

@@ -1,0 +1,1769 @@
+{
+  "projects": [
+    {
+      "title": "RabbitMQ",
+      "sections": [
+        {
+          "title": "Core Concepts",
+          "topics": [
+            {
+              "title": "Що таке RabbitMQ і яку проблему він вирішує",
+              "weight": 2
+            },
+            {
+              "title": "Message Broker як концепція",
+              "weight": 2
+            },
+            {
+              "title": "Producer",
+              "weight": 2
+            },
+            {
+              "title": "Consumer",
+              "weight": 2
+            },
+            {
+              "title": "Message",
+              "weight": 2
+            },
+            {
+              "title": "Queue",
+              "weight": 2
+            },
+            {
+              "title": "Exchange",
+              "weight": 2
+            },
+            {
+              "title": "Binding",
+              "weight": 2
+            },
+            {
+              "title": "Routing Key",
+              "weight": 2
+            },
+            {
+              "title": "Virtual Host",
+              "weight": 2
+            },
+            {
+              "title": "Connection vs Channel",
+              "weight": 2
+            },
+            {
+              "title": "Direct Exchange",
+              "weight": 2
+            },
+            {
+              "title": "Topic Exchange",
+              "weight": 2
+            },
+            {
+              "title": "Fanout Exchange",
+              "weight": 2
+            },
+            {
+              "title": "Headers Exchange",
+              "weight": 2
+            },
+            {
+              "title": "Default Exchange",
+              "weight": 2
+            },
+            {
+              "title": "Як працює routing у RabbitMQ",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Messaging Patterns",
+          "topics": [
+            {
+              "title": "Competing Consumers",
+              "weight": 3
+            },
+            {
+              "title": "Work Queue pattern",
+              "weight": 3
+            },
+            {
+              "title": "Publish/Subscribe pattern",
+              "weight": 3
+            },
+            {
+              "title": "Request/Reply через RabbitMQ",
+              "weight": 3
+            },
+            {
+              "title": "RPC pattern і його недоліки",
+              "weight": 3
+            },
+            {
+              "title": "Synchronous vs Asynchronous communication",
+              "weight": 3
+            },
+            {
+              "title": "RabbitMQ vs REST/gRPC",
+              "weight": 3
+            },
+            {
+              "title": "RabbitMQ vs Redis Pub/Sub",
+              "weight": 3
+            },
+            {
+              "title": "RabbitMQ vs Kafka",
+              "weight": 3
+            }
+          ]
+        },
+        {
+          "title": "Acknowledgements",
+          "topics": [
+            {
+              "title": "Message acknowledgement",
+              "weight": 2
+            },
+            {
+              "title": "Auto Ack vs Manual Ack",
+              "weight": 2
+            },
+            {
+              "title": "ack",
+              "weight": 2
+            },
+            {
+              "title": "nack",
+              "weight": 2
+            },
+            {
+              "title": "reject",
+              "weight": 2
+            },
+            {
+              "title": "Requeue",
+              "weight": 2
+            },
+            {
+              "title": "Що відбувається, якщо consumer впав до ack",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Durability & Delivery",
+          "topics": [
+            {
+              "title": "Message durability",
+              "weight": 2
+            },
+            {
+              "title": "Durable queues",
+              "weight": 2
+            },
+            {
+              "title": "Persistent messages",
+              "weight": 2
+            },
+            {
+              "title": "Durable queue != гарантована доставка",
+              "weight": 2
+            },
+            {
+              "title": "Publisher Confirms",
+              "weight": 2
+            },
+            {
+              "title": "Consumer acknowledgements vs Publisher Confirms",
+              "weight": 2
+            },
+            {
+              "title": "At-most-once delivery",
+              "weight": 2
+            },
+            {
+              "title": "At-least-once delivery",
+              "weight": 2
+            },
+            {
+              "title": "Exactly-once — чому RabbitMQ реально цього не гарантує",
+              "weight": 2
+            },
+            {
+              "title": "Duplicate messages",
+              "weight": 2
+            },
+            {
+              "title": "Idempotent consumers",
+              "weight": 3
+            },
+            {
+              "title": "Message deduplication",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Retry, DLQ & TTL",
+          "topics": [
+            {
+              "title": "Retry strategy",
+              "weight": 2
+            },
+            {
+              "title": "Immediate retry vs delayed retry",
+              "weight": 2
+            },
+            {
+              "title": "Exponential backoff",
+              "weight": 2
+            },
+            {
+              "title": "Retry queues",
+              "weight": 2
+            },
+            {
+              "title": "Dead Letter Exchange",
+              "weight": 2
+            },
+            {
+              "title": "Dead Letter Queue",
+              "weight": 2
+            },
+            {
+              "title": "Poison messages",
+              "weight": 2
+            },
+            {
+              "title": "Максимальна кількість retry",
+              "weight": 2
+            },
+            {
+              "title": "TTL для messages",
+              "weight": 2
+            },
+            {
+              "title": "TTL для queues",
+              "weight": 2
+            },
+            {
+              "title": "Dead-lettering по TTL",
+              "weight": 2
+            },
+            {
+              "title": "Delayed messages",
+              "weight": 2
+            },
+            {
+              "title": "Delayed Message Exchange plugin — концептуально",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Performance & Ordering",
+          "topics": [
+            {
+              "title": "Queue length limits",
+              "weight": 2
+            },
+            {
+              "title": "Message expiration",
+              "weight": 2
+            },
+            {
+              "title": "Prefetch",
+              "weight": 2
+            },
+            {
+              "title": "QoS",
+              "weight": 2
+            },
+            {
+              "title": "Як prefetch впливає на throughput і fairness",
+              "weight": 2
+            },
+            {
+              "title": "Fair dispatch",
+              "weight": 2
+            },
+            {
+              "title": "Consumer concurrency",
+              "weight": 2
+            },
+            {
+              "title": "Parallel consumers",
+              "weight": 2
+            },
+            {
+              "title": "Ordering guarantees",
+              "weight": 2
+            },
+            {
+              "title": "Коли порядок повідомлень може ламатися",
+              "weight": 2
+            },
+            {
+              "title": "Single Active Consumer — базово",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Message Design",
+          "topics": [
+            {
+              "title": "Message schema",
+              "weight": 2
+            },
+            {
+              "title": "Event envelope",
+              "weight": 2
+            },
+            {
+              "title": "Message metadata",
+              "weight": 2
+            },
+            {
+              "title": "Correlation ID",
+              "weight": 2
+            },
+            {
+              "title": "Message ID",
+              "weight": 2
+            },
+            {
+              "title": "Causation ID",
+              "weight": 2
+            },
+            {
+              "title": "Timestamp",
+              "weight": 2
+            },
+            {
+              "title": "Event versioning",
+              "weight": 2
+            },
+            {
+              "title": "Backward compatibility message contracts",
+              "weight": 2
+            },
+            {
+              "title": "Schema evolution",
+              "weight": 2
+            },
+            {
+              "title": "Event naming conventions",
+              "weight": 2
+            },
+            {
+              "title": "Commands vs Events",
+              "weight": 2
+            },
+            {
+              "title": "Integration Event vs Domain Event",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Distributed Architecture",
+          "topics": [
+            {
+              "title": "Event-driven architecture",
+              "weight": 2
+            },
+            {
+              "title": "Eventual consistency",
+              "weight": 2
+            },
+            {
+              "title": "Outbox Pattern",
+              "weight": 3
+            },
+            {
+              "title": "Inbox Pattern",
+              "weight": 3
+            },
+            {
+              "title": "Transactional Outbox",
+              "weight": 3
+            },
+            {
+              "title": "Dual-write problem",
+              "weight": 2
+            },
+            {
+              "title": "Saga Pattern",
+              "weight": 3
+            },
+            {
+              "title": "Choreography vs Orchestration",
+              "weight": 2
+            },
+            {
+              "title": "RabbitMQ у distributed transactions",
+              "weight": 2
+            },
+            {
+              "title": "Idempotency key",
+              "weight": 3
+            },
+            {
+              "title": "Race conditions між consumers",
+              "weight": 2
+            },
+            {
+              "title": "Concurrency control",
+              "weight": 2
+            },
+            {
+              "title": "Backpressure",
+              "weight": 2
+            },
+            {
+              "title": "Queue buildup",
+              "weight": 2
+            },
+            {
+              "title": "Queue depth",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Load & Flow Control",
+          "topics": [
+            {
+              "title": "Slow consumers",
+              "weight": 2
+            },
+            {
+              "title": "Consumer lag — концептуально",
+              "weight": 2
+            },
+            {
+              "title": "Flow control",
+              "weight": 2
+            },
+            {
+              "title": "Memory alarms",
+              "weight": 2
+            },
+            {
+              "title": "Disk alarms",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "High Availability",
+          "topics": [
+            {
+              "title": "High availability",
+              "weight": 2
+            },
+            {
+              "title": "RabbitMQ clustering",
+              "weight": 3
+            },
+            {
+              "title": "Node",
+              "weight": 2
+            },
+            {
+              "title": "Cluster",
+              "weight": 3
+            },
+            {
+              "title": "Queue replication",
+              "weight": 2
+            },
+            {
+              "title": "Quorum Queues",
+              "weight": 3
+            },
+            {
+              "title": "Classic Queues vs Quorum Queues",
+              "weight": 3
+            },
+            {
+              "title": "Leader / followers у Quorum Queue",
+              "weight": 3
+            },
+            {
+              "title": "Failover",
+              "weight": 3
+            },
+            {
+              "title": "Network partition — базове розуміння",
+              "weight": 2
+            },
+            {
+              "title": "Split-brain ризики — концептуально",
+              "weight": 2
+            },
+            {
+              "title": "Federation — базово",
+              "weight": 2
+            },
+            {
+              "title": "Shovel — базово",
+              "weight": 2
+            },
+            {
+              "title": "Multi-datacenter limitations",
+              "weight": 2
+            },
+            {
+              "title": "RabbitMQ Streams — базово",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Connections & Lifecycle",
+          "topics": [
+            {
+              "title": "RabbitMQ Streams vs classic queues",
+              "weight": 2
+            },
+            {
+              "title": "Connection recovery",
+              "weight": 2
+            },
+            {
+              "title": "Consumer recovery",
+              "weight": 2
+            },
+            {
+              "title": "Retry connection strategy",
+              "weight": 2
+            },
+            {
+              "title": "Heartbeats",
+              "weight": 2
+            },
+            {
+              "title": "Connection timeout",
+              "weight": 2
+            },
+            {
+              "title": "Channel errors",
+              "weight": 2
+            },
+            {
+              "title": "Graceful shutdown consumer'а",
+              "weight": 2
+            },
+            {
+              "title": "Graceful shutdown producer'а",
+              "weight": 2
+            },
+            {
+              "title": "Draining consumers",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Security",
+          "topics": [
+            {
+              "title": "Security RabbitMQ",
+              "weight": 3
+            },
+            {
+              "title": "Authentication",
+              "weight": 2
+            },
+            {
+              "title": "Authorization",
+              "weight": 2
+            },
+            {
+              "title": "Users",
+              "weight": 2
+            },
+            {
+              "title": "Permissions",
+              "weight": 2
+            },
+            {
+              "title": "Virtual Hosts як isolation boundary",
+              "weight": 2
+            },
+            {
+              "title": "TLS",
+              "weight": 2
+            },
+            {
+              "title": "Secrets management",
+              "weight": 2
+            },
+            {
+              "title": "Network isolation",
+              "weight": 2
+            },
+            {
+              "title": "Management UI security",
+              "weight": 3
+            }
+          ]
+        },
+        {
+          "title": "Monitoring",
+          "topics": [
+            {
+              "title": "Monitoring RabbitMQ",
+              "weight": 3
+            },
+            {
+              "title": "Management Plugin",
+              "weight": 2
+            },
+            {
+              "title": "Queue depth monitoring",
+              "weight": 3
+            },
+            {
+              "title": "Publish rate",
+              "weight": 2
+            },
+            {
+              "title": "Deliver rate",
+              "weight": 2
+            },
+            {
+              "title": "Ack rate",
+              "weight": 2
+            },
+            {
+              "title": "Unacked messages",
+              "weight": 2
+            },
+            {
+              "title": "Consumer count",
+              "weight": 2
+            },
+            {
+              "title": "Connection count",
+              "weight": 2
+            },
+            {
+              "title": "Channel count",
+              "weight": 2
+            },
+            {
+              "title": "Memory usage",
+              "weight": 2
+            },
+            {
+              "title": "Disk usage",
+              "weight": 2
+            },
+            {
+              "title": "Redelivered messages",
+              "weight": 2
+            },
+            {
+              "title": "DLQ monitoring",
+              "weight": 3
+            },
+            {
+              "title": "Alerting",
+              "weight": 2
+            },
+            {
+              "title": "Prometheus metrics",
+              "weight": 2
+            },
+            {
+              "title": "Grafana dashboards",
+              "weight": 2
+            },
+            {
+              "title": "Logging",
+              "weight": 2
+            },
+            {
+              "title": "Tracing message flow",
+              "weight": 3
+            },
+            {
+              "title": "Correlation IDs у distributed tracing",
+              "weight": 3
+            }
+          ]
+        },
+        {
+          "title": "Node.js & Testing",
+          "topics": [
+            {
+              "title": "RabbitMQ у Docker",
+              "weight": 2
+            },
+            {
+              "title": "RabbitMQ у Docker Compose",
+              "weight": 2
+            },
+            {
+              "title": "RabbitMQ у NestJS / Node.js",
+              "weight": 2
+            },
+            {
+              "title": "amqplib — базове розуміння",
+              "weight": 2
+            },
+            {
+              "title": "NestJS RabbitMQ transport",
+              "weight": 2
+            },
+            {
+              "title": "Connection/channel reuse",
+              "weight": 2
+            },
+            {
+              "title": "Не створювати connection на кожен message",
+              "weight": 2
+            },
+            {
+              "title": "Testing producers",
+              "weight": 3
+            },
+            {
+              "title": "Testing consumers",
+              "weight": 3
+            },
+            {
+              "title": "Integration tests з реальним RabbitMQ",
+              "weight": 3
+            },
+            {
+              "title": "Testcontainers / Docker-based tests",
+              "weight": 3
+            },
+            {
+              "title": "Mock broker vs real broker",
+              "weight": 3
+            },
+            {
+              "title": "Contract testing message schemas",
+              "weight": 3
+            },
+            {
+              "title": "Failure testing",
+              "weight": 3
+            },
+            {
+              "title": "Consumer crash testing",
+              "weight": 3
+            },
+            {
+              "title": "Retry/DLQ testing",
+              "weight": 3
+            },
+            {
+              "title": "Duplicate delivery testing",
+              "weight": 3
+            },
+            {
+              "title": "Idempotency testing",
+              "weight": 3
+            }
+          ]
+        },
+        {
+          "title": "Use Cases",
+          "topics": [
+            {
+              "title": "Broker downtime testing",
+              "weight": 3
+            },
+            {
+              "title": "Реальний use case: notifications",
+              "weight": 4
+            },
+            {
+              "title": "Реальний use case: room invites",
+              "weight": 4
+            },
+            {
+              "title": "Реальний use case: background jobs",
+              "weight": 4
+            },
+            {
+              "title": "Реальний use case: async domain events",
+              "weight": 4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Redis",
+      "sections": [
+        {
+          "title": "Foundations",
+          "topics": [
+            {
+              "title": "Що таке Redis і чому він швидкий",
+              "weight": 2
+            },
+            {
+              "title": "Коли використовувати Redis, а коли не варто",
+              "weight": 2
+            },
+            {
+              "title": "Strings",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Data Types & Keys",
+          "topics": [
+            {
+              "title": "Hashes",
+              "weight": 2
+            },
+            {
+              "title": "Lists",
+              "weight": 2
+            },
+            {
+              "title": "Sets",
+              "weight": 2
+            },
+            {
+              "title": "Sorted Sets",
+              "weight": 2
+            },
+            {
+              "title": "TTL та expiration",
+              "weight": 2
+            },
+            {
+              "title": "Key naming і key design",
+              "weight": 2
+            },
+            {
+              "title": "Serialization даних",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Caching Patterns",
+          "topics": [
+            {
+              "title": "Cache-aside pattern",
+              "weight": 3
+            },
+            {
+              "title": "Cache invalidation",
+              "weight": 3
+            },
+            {
+              "title": "Stale cache",
+              "weight": 3
+            },
+            {
+              "title": "Cache stampede",
+              "weight": 3
+            },
+            {
+              "title": "Cache penetration",
+              "weight": 3
+            },
+            {
+              "title": "Cache avalanche",
+              "weight": 3
+            },
+            {
+              "title": "Redis для sessions",
+              "weight": 3
+            },
+            {
+              "title": "Redis для rate limiting",
+              "weight": 3
+            },
+            {
+              "title": "Redis для temporary state",
+              "weight": 3
+            },
+            {
+              "title": "Redis для presence",
+              "weight": 3
+            }
+          ]
+        },
+        {
+          "title": "Pub/Sub & Streams",
+          "topics": [
+            {
+              "title": "Redis Pub/Sub",
+              "weight": 2
+            },
+            {
+              "title": "Обмеження Pub/Sub",
+              "weight": 2
+            },
+            {
+              "title": "Redis Streams — базове розуміння",
+              "weight": 2
+            },
+            {
+              "title": "Atomic operations",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Atomicity & Locks",
+          "topics": [
+            {
+              "title": "MULTI / EXEC",
+              "weight": 2
+            },
+            {
+              "title": "WATCH",
+              "weight": 2
+            },
+            {
+              "title": "Race conditions у Redis",
+              "weight": 2
+            },
+            {
+              "title": "Distributed locks",
+              "weight": 2
+            },
+            {
+              "title": "Redlock — концептуально і його обмеження",
+              "weight": 2
+            },
+            {
+              "title": "Lua scripts для atomic logic",
+              "weight": 2
+            },
+            {
+              "title": "Idempotency через Redis",
+              "weight": 3
+            }
+          ]
+        },
+        {
+          "title": "Persistence & Memory",
+          "topics": [
+            {
+              "title": "Persistence: RDB",
+              "weight": 2
+            },
+            {
+              "title": "Persistence: AOF",
+              "weight": 2
+            },
+            {
+              "title": "RDB vs AOF",
+              "weight": 2
+            },
+            {
+              "title": "Eviction policies",
+              "weight": 2
+            },
+            {
+              "title": "maxmemory",
+              "weight": 2
+            },
+            {
+              "title": "Hot keys",
+              "weight": 2
+            },
+            {
+              "title": "Big keys",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Replication & Cluster",
+          "topics": [
+            {
+              "title": "Replication",
+              "weight": 2
+            },
+            {
+              "title": "Primary / Replica",
+              "weight": 2
+            },
+            {
+              "title": "Replication lag",
+              "weight": 2
+            },
+            {
+              "title": "Redis Sentinel",
+              "weight": 2
+            },
+            {
+              "title": "Redis Cluster — базове розуміння",
+              "weight": 3
+            },
+            {
+              "title": "Sharding і hash slots",
+              "weight": 2
+            },
+            {
+              "title": "Failure scenarios",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Reliability & Operations",
+          "topics": [
+            {
+              "title": "Що робити, якщо Redis недоступний",
+              "weight": 2
+            },
+            {
+              "title": "Graceful degradation",
+              "weight": 2
+            },
+            {
+              "title": "Timeouts",
+              "weight": 2
+            },
+            {
+              "title": "Retry + exponential backoff",
+              "weight": 2
+            },
+            {
+              "title": "Connection management",
+              "weight": 2
+            },
+            {
+              "title": "Health checks",
+              "weight": 2
+            },
+            {
+              "title": "Monitoring Redis",
+              "weight": 3
+            }
+          ]
+        },
+        {
+          "title": "Monitoring",
+          "topics": [
+            {
+              "title": "Cache hit / miss ratio",
+              "weight": 2
+            },
+            {
+              "title": "Memory usage",
+              "weight": 2
+            },
+            {
+              "title": "Evictions monitoring",
+              "weight": 3
+            },
+            {
+              "title": "Latency monitoring",
+              "weight": 3
+            },
+            {
+              "title": "Connection monitoring",
+              "weight": 3
+            },
+            {
+              "title": "Slowlog",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Security",
+          "topics": [
+            {
+              "title": "Redis security",
+              "weight": 3
+            },
+            {
+              "title": "Authentication та ACL",
+              "weight": 2
+            },
+            {
+              "title": "Network isolation",
+              "weight": 2
+            },
+            {
+              "title": "TLS",
+              "weight": 2
+            },
+            {
+              "title": "Не зберігати sensitive data бездумно",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Comparisons",
+          "topics": [
+            {
+              "title": "Redis vs PostgreSQL",
+              "weight": 2
+            },
+            {
+              "title": "Redis vs local in-memory cache",
+              "weight": 2
+            },
+            {
+              "title": "Redis vs Memcached",
+              "weight": 2
+            },
+            {
+              "title": "Redis Pub/Sub vs RabbitMQ",
+              "weight": 2
+            },
+            {
+              "title": "Redis Streams vs RabbitMQ/Kafka",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Node.js & Use Cases",
+          "topics": [
+            {
+              "title": "Redis у Docker / Docker Compose",
+              "weight": 2
+            },
+            {
+              "title": "Redis client у Node.js / NestJS",
+              "weight": 2
+            },
+            {
+              "title": "Integration testing з реальним Redis",
+              "weight": 3
+            },
+            {
+              "title": "Mock Redis vs real Redis у тестах",
+              "weight": 3
+            },
+            {
+              "title": "Cleanup test data",
+              "weight": 3
+            },
+            {
+              "title": "Реальний use case: cache для catalog",
+              "weight": 4
+            },
+            {
+              "title": "Реальний use case: room state / presence / WebSocket sync",
+              "weight": 4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "System Design",
+      "sections": [
+        {
+          "title": "Foundations",
+          "topics": [
+            {
+              "title": "Що таке System Design і які цілі він вирішує",
+              "weight": 2
+            },
+            {
+              "title": "Functional vs Non-Functional Requirements",
+              "weight": 2
+            },
+            {
+              "title": "Як збирати constraints перед дизайном",
+              "weight": 2
+            },
+            {
+              "title": "Capacity estimation: users, RPS/QPS, storage, bandwidth",
+              "weight": 2
+            },
+            {
+              "title": "Latency vs Throughput",
+              "weight": 2
+            },
+            {
+              "title": "Vertical vs Horizontal Scaling",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Scaling & Edge",
+          "topics": [
+            {
+              "title": "Stateless vs Stateful services",
+              "weight": 2
+            },
+            {
+              "title": "Load Balancing",
+              "weight": 2
+            },
+            {
+              "title": "Reverse Proxy",
+              "weight": 2
+            },
+            {
+              "title": "API Gateway",
+              "weight": 2
+            },
+            {
+              "title": "CDN",
+              "weight": 2
+            },
+            {
+              "title": "Caching",
+              "weight": 2
+            },
+            {
+              "title": "Cache-aside / write-through / write-behind",
+              "weight": 2
+            },
+            {
+              "title": "Cache invalidation",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Databases",
+          "topics": [
+            {
+              "title": "Database choice: SQL vs NoSQL",
+              "weight": 2
+            },
+            {
+              "title": "Database normalization vs denormalization",
+              "weight": 2
+            },
+            {
+              "title": "Indexes",
+              "weight": 2
+            },
+            {
+              "title": "Read replicas",
+              "weight": 2
+            },
+            {
+              "title": "Replication",
+              "weight": 2
+            },
+            {
+              "title": "Partitioning",
+              "weight": 2
+            },
+            {
+              "title": "Sharding",
+              "weight": 2
+            },
+            {
+              "title": "Consistent Hashing",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "CAP & Consistency",
+          "topics": [
+            {
+              "title": "CAP Theorem",
+              "weight": 2
+            },
+            {
+              "title": "PACELC — базове розуміння",
+              "weight": 2
+            },
+            {
+              "title": "Strong vs Eventual Consistency",
+              "weight": 2
+            },
+            {
+              "title": "ACID vs BASE",
+              "weight": 2
+            },
+            {
+              "title": "Transactions у distributed systems",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Messaging & Events",
+          "topics": [
+            {
+              "title": "Optimistic vs Pessimistic Locking",
+              "weight": 2
+            },
+            {
+              "title": "Idempotency",
+              "weight": 3
+            },
+            {
+              "title": "Message Queues",
+              "weight": 2
+            },
+            {
+              "title": "Pub/Sub",
+              "weight": 2
+            },
+            {
+              "title": "Sync vs Async communication",
+              "weight": 2
+            },
+            {
+              "title": "RabbitMQ vs Kafka — концептуально",
+              "weight": 2
+            },
+            {
+              "title": "Event-driven architecture",
+              "weight": 2
+            },
+            {
+              "title": "Eventual consistency через events",
+              "weight": 2
+            },
+            {
+              "title": "Retry",
+              "weight": 2
+            },
+            {
+              "title": "Exponential Backoff + Jitter",
+              "weight": 2
+            },
+            {
+              "title": "Timeout",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Resilience Patterns",
+          "topics": [
+            {
+              "title": "Circuit Breaker",
+              "weight": 3
+            },
+            {
+              "title": "Bulkhead",
+              "weight": 3
+            },
+            {
+              "title": "Rate Limiting",
+              "weight": 3
+            },
+            {
+              "title": "Token Bucket",
+              "weight": 3
+            },
+            {
+              "title": "Leaky Bucket",
+              "weight": 3
+            },
+            {
+              "title": "Sliding Window",
+              "weight": 3
+            },
+            {
+              "title": "Distributed Locks",
+              "weight": 3
+            },
+            {
+              "title": "Leader Election — концептуально",
+              "weight": 3
+            },
+            {
+              "title": "Service Discovery",
+              "weight": 3
+            }
+          ]
+        },
+        {
+          "title": "HA & Fault Tolerance",
+          "topics": [
+            {
+              "title": "Health Checks",
+              "weight": 2
+            },
+            {
+              "title": "Heartbeat",
+              "weight": 2
+            },
+            {
+              "title": "Failover",
+              "weight": 3
+            },
+            {
+              "title": "High Availability",
+              "weight": 2
+            },
+            {
+              "title": "Fault Tolerance",
+              "weight": 2
+            },
+            {
+              "title": "Redundancy",
+              "weight": 2
+            },
+            {
+              "title": "Single Point of Failure",
+              "weight": 2
+            },
+            {
+              "title": "Graceful Degradation",
+              "weight": 2
+            },
+            {
+              "title": "Backpressure",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Distributed Data",
+          "topics": [
+            {
+              "title": "Data duplication",
+              "weight": 2
+            },
+            {
+              "title": "Data ownership між сервісами",
+              "weight": 2
+            },
+            {
+              "title": "Database per service",
+              "weight": 2
+            },
+            {
+              "title": "Saga Pattern",
+              "weight": 3
+            },
+            {
+              "title": "Outbox Pattern",
+              "weight": 3
+            },
+            {
+              "title": "Inbox Pattern",
+              "weight": 3
+            },
+            {
+              "title": "Two-Phase Commit — розуміти, чому часто не хочемо",
+              "weight": 2
+            },
+            {
+              "title": "Exactly-once vs At-least-once vs At-most-once delivery",
+              "weight": 2
+            },
+            {
+              "title": "Ordering guarantees",
+              "weight": 2
+            },
+            {
+              "title": "Deduplication",
+              "weight": 2
+            },
+            {
+              "title": "Event versioning",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "APIs & Architecture",
+          "topics": [
+            {
+              "title": "API versioning",
+              "weight": 2
+            },
+            {
+              "title": "REST vs gRPC vs WebSocket vs SSE",
+              "weight": 2
+            },
+            {
+              "title": "Monolith vs Modular Monolith vs Microservices",
+              "weight": 2
+            },
+            {
+              "title": "Service boundaries",
+              "weight": 2
+            },
+            {
+              "title": "Coupling vs Cohesion",
+              "weight": 2
+            },
+            {
+              "title": "Domain boundaries",
+              "weight": 2
+            },
+            {
+              "title": "Bounded Context — базово",
+              "weight": 2
+            },
+            {
+              "title": "CQRS — коли доречно",
+              "weight": 2
+            },
+            {
+              "title": "Event Sourcing — базово",
+              "weight": 2
+            },
+            {
+              "title": "File/Object Storage",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Storage & Search",
+          "topics": [
+            {
+              "title": "S3-style storage",
+              "weight": 2
+            },
+            {
+              "title": "Blob storage vs database storage",
+              "weight": 2
+            },
+            {
+              "title": "Search systems — Elasticsearch/OpenSearch концептуально",
+              "weight": 2
+            },
+            {
+              "title": "Full-text search",
+              "weight": 2
+            },
+            {
+              "title": "Background jobs",
+              "weight": 2
+            },
+            {
+              "title": "Schedulers / Cron",
+              "weight": 2
+            },
+            {
+              "title": "Distributed Scheduler",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Jobs, Auth & Security",
+          "topics": [
+            {
+              "title": "Session storage",
+              "weight": 2
+            },
+            {
+              "title": "Authentication architecture",
+              "weight": 2
+            },
+            {
+              "title": "Authorization architecture",
+              "weight": 2
+            },
+            {
+              "title": "JWT vs Session-based auth",
+              "weight": 2
+            },
+            {
+              "title": "OAuth/OIDC — high-level",
+              "weight": 2
+            },
+            {
+              "title": "Security basics у system design",
+              "weight": 3
+            },
+            {
+              "title": "TLS/HTTPS",
+              "weight": 2
+            },
+            {
+              "title": "Secrets management",
+              "weight": 2
+            },
+            {
+              "title": "Network isolation",
+              "weight": 2
+            },
+            {
+              "title": "Rate limiting як security layer",
+              "weight": 3
+            }
+          ]
+        },
+        {
+          "title": "Observability",
+          "topics": [
+            {
+              "title": "Observability",
+              "weight": 2
+            },
+            {
+              "title": "Logging",
+              "weight": 2
+            },
+            {
+              "title": "Metrics",
+              "weight": 2
+            },
+            {
+              "title": "Distributed Tracing",
+              "weight": 3
+            },
+            {
+              "title": "Correlation IDs",
+              "weight": 2
+            },
+            {
+              "title": "SLA / SLO / SLI",
+              "weight": 2
+            },
+            {
+              "title": "Error Budget",
+              "weight": 2
+            },
+            {
+              "title": "Monitoring critical paths",
+              "weight": 3
+            },
+            {
+              "title": "Bottlenecks",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Bottlenecks & Problems",
+          "topics": [
+            {
+              "title": "Hotspots / Hot Keys",
+              "weight": 2
+            },
+            {
+              "title": "Thundering Herd / Cache Stampede",
+              "weight": 2
+            },
+            {
+              "title": "N+1 problem",
+              "weight": 2
+            },
+            {
+              "title": "Connection Pooling",
+              "weight": 2
+            },
+            {
+              "title": "Database connection limits",
+              "weight": 2
+            },
+            {
+              "title": "Queue depth",
+              "weight": 2
+            },
+            {
+              "title": "Dead Letter Queue",
+              "weight": 2
+            },
+            {
+              "title": "Poison Messages",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "DR & Multi-Region",
+          "topics": [
+            {
+              "title": "Data retention",
+              "weight": 2
+            },
+            {
+              "title": "Backup",
+              "weight": 2
+            },
+            {
+              "title": "Restore",
+              "weight": 2
+            },
+            {
+              "title": "Disaster Recovery",
+              "weight": 2
+            },
+            {
+              "title": "RPO / RTO",
+              "weight": 2
+            },
+            {
+              "title": "Multi-region basics",
+              "weight": 2
+            },
+            {
+              "title": "Active-Passive vs Active-Active",
+              "weight": 2
+            },
+            {
+              "title": "Geo-replication — базово",
+              "weight": 2
+            }
+          ]
+        },
+        {
+          "title": "Deployment & Trade-offs",
+          "topics": [
+            {
+              "title": "Deployment topology",
+              "weight": 2
+            },
+            {
+              "title": "Blue-Green / Canary — концептуально",
+              "weight": 2
+            },
+            {
+              "title": "Zero-downtime deployment",
+              "weight": 2
+            },
+            {
+              "title": "Zero-downtime migrations",
+              "weight": 2
+            },
+            {
+              "title": "Trade-offs у System Design",
+              "weight": 2
+            },
+            {
+              "title": "Cost vs Performance",
+              "weight": 2
+            },
+            {
+              "title": "Consistency vs Availability",
+              "weight": 2
+            },
+            {
+              "title": "Latency vs Durability",
+              "weight": 2
+            },
+            {
+              "title": "Simplicity vs Scalability",
+              "weight": 2
+            },
+            {
+              "title": "Security vs Usability",
+              "weight": 3
+            },
+            {
+              "title": "Як пояснювати і захищати system design рішення",
+              "weight": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+Що таке RabbitMQ і яку проблему він вирішує
+Message Broker як концепція
+Producer
+Consumer
+Message
+Queue
+Exchange
+Binding
+Routing Key
+Virtual Host
+Connection vs Channel
+Direct Exchange
+Topic Exchange
+Fanout Exchange
+Headers Exchange
+Default Exchange
+Як працює routing у RabbitMQ
+Competing Consumers
+Work Queue pattern
+Publish/Subscribe pattern
+Request/Reply через RabbitMQ
+RPC pattern і його недоліки
+Synchronous vs Asynchronous communication
+RabbitMQ vs REST/gRPC
+RabbitMQ vs Redis Pub/Sub
+RabbitMQ vs Kafka
+Message acknowledgement
+Auto Ack vs Manual Ack
+ack
+nack
+reject
+Requeue
+Що відбувається, якщо consumer впав до ack
+Message durability
+Durable queues
+Persistent messages
+Durable queue != гарантована доставка
+Publisher Confirms
+Consumer acknowledgements vs Publisher Confirms
+At-most-once delivery
+At-least-once delivery
+Exactly-once — чому RabbitMQ реально цього не гарантує
+Duplicate messages
+Idempotent consumers
+Message deduplication
+Retry strategy
+Immediate retry vs delayed retry
+Exponential backoff
+Retry queues
+Dead Letter Exchange
+Dead Letter Queue
+Poison messages
+Максимальна кількість retry
+TTL для messages
+TTL для queues
+Dead-lettering по TTL
+Delayed messages
+Delayed Message Exchange plugin — концептуально
+Queue length limits
+Message expiration
+Prefetch
+QoS
+Як prefetch впливає на throughput і fairness
+Fair dispatch
+Consumer concurrency
+Parallel consumers
+Ordering guarantees
+Коли порядок повідомлень може ламатися
+Single Active Consumer — базово
+Message schema
+Event envelope
+Message metadata
+Correlation ID
+Message ID
+Causation ID
+Timestamp
+Event versioning
+Backward compatibility message contracts
+Schema evolution
+Event naming conventions
+Commands vs Events
+Integration Event vs Domain Event
+Event-driven architecture
+Eventual consistency
+Outbox Pattern
+Inbox Pattern
+Transactional Outbox
+Dual-write problem
+Saga Pattern
+Choreography vs Orchestration
+RabbitMQ у distributed transactions
+Idempotency key
+Race conditions між consumers
+Concurrency control
+Backpressure
+Queue buildup
+Queue depth
+Slow consumers
+Consumer lag — концептуально
+Flow control
+Memory alarms
+Disk alarms
+High availability
+RabbitMQ clustering
+Node
+Cluster
+Queue replication
+Quorum Queues
+Classic Queues vs Quorum Queues
+Leader / followers у Quorum Queue
+Failover
+Network partition — базове розуміння
+Split-brain ризики — концептуально
+Federation — базово
+Shovel — базово
+Multi-datacenter limitations
+RabbitMQ Streams — базово
+RabbitMQ Streams vs classic queues
+Connection recovery
+Consumer recovery
+Retry connection strategy
+Heartbeats
+Connection timeout
+Channel errors
+Graceful shutdown consumer'а
+Graceful shutdown producer'а
+Draining consumers
+Security RabbitMQ
+Authentication
+Authorization
+Users
+Permissions
+Virtual Hosts як isolation boundary
+TLS
+Secrets management
+Network isolation
+Management UI security
+Monitoring RabbitMQ
+Management Plugin
+Queue depth monitoring
+Publish rate
+Deliver rate
+Ack rate
+Unacked messages
+Consumer count
+Connection count
+Channel count
+Memory usage
+Disk usage
+Redelivered messages
+DLQ monitoring
+Alerting
+Prometheus metrics
+Grafana dashboards
+Logging
+Tracing message flow
+Correlation IDs у distributed tracing
+RabbitMQ у Docker
+RabbitMQ у Docker Compose
+RabbitMQ у NestJS / Node.js
+amqplib — базове розуміння
+NestJS RabbitMQ transport
+Connection/channel reuse
+Не створювати connection на кожен message
+Testing producers
+Testing consumers
+Integration tests з реальним RabbitMQ
+Testcontainers / Docker-based tests
+Mock broker vs real broker
+Contract testing message schemas
+Failure testing
+Consumer crash testing
+Retry/DLQ testing
+Duplicate delivery testing
+Idempotency testing
+Broker downtime testing
+Реальний use case: notifications
+Реальний use case: room invites
+Реальний use case: background jobs
+Реальний use case: async domain events

@@ -1,0 +1,75 @@
+Що таке Redis і чому він швидкий
+Коли використовувати Redis, а коли не варто
+Strings
+Hashes
+Lists
+Sets
+Sorted Sets
+TTL та expiration
+Key naming і key design
+Serialization даних
+Cache-aside pattern
+Cache invalidation
+Stale cache
+Cache stampede
+Cache penetration
+Cache avalanche
+Redis для sessions
+Redis для rate limiting
+Redis для temporary state
+Redis для presence
+Redis Pub/Sub
+Обмеження Pub/Sub
+Redis Streams — базове розуміння
+Atomic operations
+MULTI / EXEC
+WATCH
+Race conditions у Redis
+Distributed locks
+Redlock — концептуально і його обмеження
+Lua scripts для atomic logic
+Idempotency через Redis
+Persistence: RDB
+Persistence: AOF
+RDB vs AOF
+Eviction policies
+maxmemory
+Hot keys
+Big keys
+Replication
+Primary / Replica
+Replication lag
+Redis Sentinel
+Redis Cluster — базове розуміння
+Sharding і hash slots
+Failure scenarios
+Що робити, якщо Redis недоступний
+Graceful degradation
+Timeouts
+Retry + exponential backoff
+Connection management
+Health checks
+Monitoring Redis
+Cache hit / miss ratio
+Memory usage
+Evictions monitoring
+Latency monitoring
+Connection monitoring
+Slowlog
+Redis security
+Authentication та ACL
+Network isolation
+TLS
+Не зберігати sensitive data бездумно
+Redis vs PostgreSQL
+Redis vs local in-memory cache
+Redis vs Memcached
+Redis Pub/Sub vs RabbitMQ
+Redis Streams vs RabbitMQ/Kafka
+Redis у Docker / Docker Compose
+Redis client у Node.js / NestJS
+Integration testing з реальним Redis
+Mock Redis vs real Redis у тестах
+Cleanup test data
+Реальний use case: cache для catalog
+Реальний use case: room state / presence / WebSocket sync
