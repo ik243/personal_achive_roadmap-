@@ -8,6 +8,7 @@ import {
 } from "@/lib/domain/aggregate";
 import { formatDuration, groupMinutesByDay } from "@/lib/domain/time";
 import { DurationText } from "@/components/shared/duration-text";
+import { TimeByDayChart } from "@/components/shared/time-by-day-chart";
 import { ProgressBar } from "@/components/shared/progress-bar";
 import { StatCard } from "@/components/shared/stat-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -86,24 +87,7 @@ export function StatsView({ projectId }: { projectId: string }) {
           <CardTitle>Study Time — Last 30 Days</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-end gap-1 h-24">
-            {last30.map((day) => {
-              const max = Math.max(...last30.map((d) => d.minutes), 1);
-              const height = (day.minutes / max) * 100;
-              return (
-                <div key={day.date} className="flex-1 flex flex-col items-center gap-1">
-                  <div
-                    className="w-full rounded-t bg-primary/80 min-h-[2px]"
-                    style={{ height: `${height}%` }}
-                    title={formatDuration(day.minutes)}
-                  />
-                  <span className="text-[10px] text-muted-foreground">
-                    {day.date.slice(5)}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
+          <TimeByDayChart data={last30} heightClass="h-32" />
         </CardContent>
       </Card>
     </div>

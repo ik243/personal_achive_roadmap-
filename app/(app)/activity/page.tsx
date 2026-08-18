@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { PageHeader } from "@/components/layout/page-header";
 import { DurationText } from "@/components/shared/duration-text";
+import { TimeByDayChart } from "@/components/shared/time-by-day-chart";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buildActivityFeed, getGlobalMetrics } from "@/lib/domain/aggregate";
@@ -96,20 +97,7 @@ export default function ActivityPage() {
           <CardTitle>Time by day</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-end gap-1 h-32">
-            {chart.map((day) => {
-              const max = Math.max(...chart.map((d) => d.minutes), 1);
-              return (
-                <div key={day.date} className="flex-1 flex flex-col items-center gap-1">
-                  <div
-                    className="w-full rounded-t bg-primary/80 min-h-[2px]"
-                    style={{ height: `${(day.minutes / max) * 100}%` }}
-                  />
-                  <span className="text-[10px] text-muted-foreground">{day.date.slice(5)}</span>
-                </div>
-              );
-            })}
-          </div>
+          <TimeByDayChart data={chart} heightClass="h-40 sm:h-48" />
         </CardContent>
       </Card>
 

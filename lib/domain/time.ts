@@ -42,6 +42,13 @@ export function daysAgo(days: number): Date {
   return startOfDay(date);
 }
 
+export function toLocalDateKey(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 export function groupMinutesByDay(
   entries: Array<{ loggedAt: string; durationMinutes: number }>,
   days: number,
@@ -52,13 +59,13 @@ export function groupMinutesByDay(
   for (let i = 0; i < days; i++) {
     const d = new Date(start);
     d.setDate(start.getDate() + i);
-    buckets.set(d.toISOString().slice(0, 10), 0);
+    buckets.set(toLocalDateKey(d), 0);
   }
 
   for (const entry of entries) {
     const logged = new Date(entry.loggedAt);
     if (logged < start) continue;
-    const key = logged.toISOString().slice(0, 10);
+    const key = toLocalDateKey(logged);
     if (buckets.has(key)) {
       buckets.set(key, (buckets.get(key) ?? 0) + entry.durationMinutes);
     }
