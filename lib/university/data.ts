@@ -38,6 +38,13 @@ export const UNIVERSITY_PROJECT_TITLE = universityCatalog.projectTitle;
 export const SMART_TECH_SUBJECT = universityCatalog.primarySubject;
 export const universitySubjects = universityCatalog.subjects;
 
+export interface UniversityScoreEntry {
+  score: number;
+  updatedAt: string;
+}
+
+export type UniversityScores = Record<string, UniversityScoreEntry>;
+
 export function findUniversityProject(data: AppData) {
   return data.projects.find((project) => project.title === UNIVERSITY_PROJECT_TITLE);
 }
@@ -92,6 +99,45 @@ export function getCurrentPossibleScore(today = new Date()) {
         if (assessment.type === "pending") return subjectSum;
         if (!assessment.bands) return subjectSum + assessment.maxScore;
         return subjectSum + getCurrentAssessmentScore(assessment, today);
+      }, 0),
+    0,
+  );
+}
+
+export function getAssessmentKey(subjectName: string, assessmentTitle: string) {
+  return `${subjectName}::${assessmentTitle}`;
+}
+
+export function getEnteredScore(
+  scores: UniversityScores,
+  subjectName: string,
+  assessmentTitle: string,
+) {
+  return scores[getAssessmentKey(subjectName, assessmentTitle)]?.score ?? null;
+}
+
+export function sumEnteredScores(scores: UniversityScores, type?: UniversityAssessment["type"]) {
+  return universitySubjects.reduce(
+    (sum, subject) =>
+      sum +
+      subject.assessments.reduce((subjectSum, assessment) => {
+        if (type && assessment.type !== type) return subjectSum;
+        return (
+          subjectSum +
+          (getEnteredScore(scores, subject.name, assessment.title) ?? 0)
+        );
+      }, 0),
+    0,
+  );
+}
+
+export function sumMaxScores(type?: UniversityAssessment["type"]) {
+  return universitySubjects.reduce(
+    (sum, subject) =>
+      sum +
+      subject.assessments.reduce((subjectSum, assessment) => {
+        if (type && assessment.type !== type) return subjectSum;
+        return subjectSum + assessment.maxScore;
       }, 0),
     0,
   );

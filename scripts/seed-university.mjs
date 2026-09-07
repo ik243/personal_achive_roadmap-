@@ -23,12 +23,7 @@ function scoreWord(score) {
   return "балів";
 }
 
-function formatDate(date) {
-  const [year, month, day] = date.split("-");
-  return `${day}.${month}.${year}`;
-}
-
-function stepRowsForAssessment(projectId, sectionId, assessment) {
+function stepRowsForAssessment(assessment) {
   if (assessment.type === "pending") {
     return [
       {
@@ -38,27 +33,11 @@ function stepRowsForAssessment(projectId, sectionId, assessment) {
     ];
   }
 
-  if (!assessment.bands?.length) {
-    return [
-      {
-        title: `${assessment.title} — ${assessment.maxScore} ${scoreWord(assessment.maxScore)}`,
-        weight: Math.min(5, Math.max(1, Math.ceil(assessment.maxScore / 10))),
-      },
-    ];
-  }
-
   return [
     {
-      title: `${assessment.title} — максимум ${assessment.maxScore} ${scoreWord(assessment.maxScore)}`,
-      weight: Math.min(5, Math.max(1, assessment.maxScore)),
+      title: `${assessment.title} — ${assessment.maxScore} ${scoreWord(assessment.maxScore)}`,
+      weight: Math.min(5, Math.max(1, Math.ceil(assessment.maxScore / 10))),
     },
-    ...assessment.bands.map((band) => {
-      const prefix = band.kind === "until" ? "до" : "з";
-      return {
-        title: `${assessment.title}: ${band.score} ${scoreWord(band.score)} ${prefix} ${formatDate(band.date)}`,
-        weight: Math.max(1, Math.min(5, band.score || 1)),
-      };
-    }),
   ];
 }
 
@@ -128,7 +107,7 @@ async function main() {
   const sections = [];
   const steps = [];
 
-  catalog.subjects.forEach((subject, subjectIndex) => {
+  catalog.subjects.forEach((subject) => {
     const overviewSectionId = randomUUID();
     sections.push({
       id: overviewSectionId,
@@ -139,45 +118,9 @@ async function main() {
       updated_at: now,
     });
 
-    const summaryParts = [
-      subject.practical && `ПР: ${subject.practical}`,
-      subject.labs,
-      subject.writtenExam,
-      subject.oralExam,
-    ].filter(Boolean);
-
-    steps.push({
-      id: randomUUID(),
-      project_id: projectId,
-      section_id: overviewSectionId,
-      title: summaryParts.length ? `Огляд предмету — ${summaryParts.join("; ")}` : "Огляд предмету — деталі очікуються",
-      status: "NOT_STARTED",
-      weight: subjectIndex === 0 ? 3 : 1,
-      position: 0,
-      completed_at: null,
-      created_at: now,
-      updated_at: now,
-    });
-
     subject.assessments.forEach((assessment) => {
-      const sectionId =
-        subject.name === catalog.primarySubject
-          ? randomUUID()
-          : overviewSectionId;
-
-      if (subject.name === catalog.primarySubject) {
-        sections.push({
-          id: sectionId,
-          project_id: projectId,
-          title: `${subject.name} / ${assessment.shortTitle}`,
-          position: sections.length,
-          created_at: now,
-          updated_at: now,
-        });
-      }
-
-      const rows = stepRowsForAssessment(projectId, sectionId, assessment);
-      const existingCount = steps.filter((step) => step.section_id === sectionId).length;
+      const rows = stepRowsForAssessment(assessment);
+      const existingCount = steps.filter((step) => step.section_id === overviewSectionId).length;
 
       rows.forEach((row, rowIndex) => {
         if (row.title.length > 200) {
@@ -187,7 +130,7 @@ async function main() {
         steps.push({
           id: randomUUID(),
           project_id: projectId,
-          section_id: sectionId,
+          section_id: overviewSectionId,
           title: row.title,
           status: "NOT_STARTED",
           weight: row.weight,

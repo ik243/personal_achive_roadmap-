@@ -1,63 +1,91 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import Link from "next/link";
-import { CalendarDays, ClipboardCheck, GraduationCap, ListChecks } from "lucide-react";
+import { CalendarDays, Info, ListChecks, MoreHorizontal, Save } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { NotebookSection } from "@/components/layout/notebook-section";
-import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
 import { ProgressBar } from "@/components/shared/progress-bar";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants, Button } from "@/components/ui/button";
 import {
-  findStepStatus,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
   findUniversityProject,
   formatDateUk,
   formatScoreBand,
+  getAssessmentKey,
   getCurrentAssessmentScore,
   getCurrentPossibleScore,
+  getEnteredScore,
   getExamOralScore,
   getExamPracticalScore,
   getKnownMaxScore,
-  getLabMaxScore,
   getNextBand,
   getUpcomingDeadlines,
+  scoreWord,
   SMART_TECH_SUBJECT,
+  sumEnteredScores,
+  sumMaxScores,
+  type UniversityAssessment,
+  type UniversityScores,
+  type UniversitySubject,
   universitySubjects,
 } from "@/lib/university/data";
-import { cn } from "@/lib/utils";
+import { readUniversityScores, writeUniversityScores } from "@/lib/university/storage";
 import { useAppData } from "@/providers/app-data-provider";
 
-const statusLabels = {
-  NOT_STARTED: "Не почато",
-  IN_PROGRESS: "В роботі",
-  PAUSED: "Пауза",
-  COMPLETED: "Готово",
-  SKIPPED: "Пропущено",
-} as const;
+type WorkSelection = {
+  subject: UniversitySubject;
+  assessment: UniversityAssessment;
+};
+
+type SubjectSelection = {
+  subject: UniversitySubject;
+};
+
+const statusToday = new Date();
 
 export default function UniversityPage() {
   const { data, isReady } = useAppData();
+  const [scores, setScores] = useState<UniversityScores>(() => readUniversityScores());
+  const [selectedWork, setSelectedWork] = useState<WorkSelection | null>(null);
+  const [selectedSubject, setSelectedSubject] = useState<SubjectSelection | null>(null);
+
+  const project = findUniversityProject(data);
+  const upcoming = getUpcomingDeadlines(statusToday, 5);
+  const knownMax = getKnownMaxScore();
+  const enteredTotal = sumEnteredScores(scores);
+  const currentPossible = getCurrentPossibleScore(statusToday);
+  const progress = knownMax ? Math.round((enteredTotal / knownMax) * 100) : 0;
 
   if (!isReady) return null;
 
-  const project = findUniversityProject(data);
-  const smartTech = universitySubjects.find((subject) => subject.name === SMART_TECH_SUBJECT);
-  const upcoming = getUpcomingDeadlines(new Date(), 6);
-  const knownMaxScore = getKnownMaxScore();
-  const currentPossibleScore = getCurrentPossibleScore(new Date());
-  const smartTechAssessments = smartTech?.assessments ?? [];
-  const completedKnownScore = smartTechAssessments.reduce((sum, assessment) => {
-    const status = findStepStatus(data, SMART_TECH_SUBJECT, assessment.title);
-    return status === "COMPLETED" ? sum + assessment.maxScore : sum;
-  }, 0);
-  const completedKnownProgress = knownMaxScore
-    ? Math.round((completedKnownScore / knownMaxScore) * 100)
-    : 0;
+  const saveScore = (subject: UniversitySubject, assessment: UniversityAssessment, score: number) => {
+    const next = {
+      ...scores,
+      [getAssessmentKey(subject.name, assessment.title)]: {
+        score,
+        updatedAt: new Date().toISOString(),
+      },
+    };
+    setScores(next);
+    writeUniversityScores(next);
+  };
 
   return (
     <div className="space-y-8">
       <PageHeader
         title="University"
-        description="2026-2027 навчальний трек, дедлайни та бали."
+        description="Предмети, роботи, дедлайни та реальні бали в одному місці."
         actions={
           project && (
             <Link href={`/projects/${project.id}`} className={buttonVariants({ variant: "outline", size: "sm" })}>
@@ -69,31 +97,31 @@ export default function UniversityPage() {
       />
 
       <div className="grid gap-x-8 gap-y-2 sm:grid-cols-2 lg:grid-cols-4">
-        <Metric label="Відомий максимум" value={`${knownMaxScore} б`} hint="по наявних даних" />
-        <Metric label="Можна взяти зараз" value={`${currentPossibleScore} б`} hint="з урахуванням дедлайнів" />
-        <Metric label="ПЧ екзамен" value={`${getExamPracticalScore()} б`} hint="практична частина" />
-        <Metric label="Усна частина" value={`${getExamOralScore()} б`} hint="константа екзамену" />
+        <Metric label="Мій результат" value={`${enteredTotal}/${knownMax}`} hint="введені реальні бали" />
+        <Metric label="Можливо зараз" value={`${currentPossible}/${knownMax}`} hint="автоматично по дедлайнах" />
+        <Metric label="ПЧ" value={`${getExamPracticalScore()} б`} hint="практична частина екзамену" />
+        <Metric label="УЧ" value={`${getExamOralScore()} б`} hint="усна частина екзамену" />
       </div>
 
-      <NotebookSection title="Overall score">
+      <NotebookSection title="Score progress">
         <div className="space-y-3">
-          <div className="flex flex-wrap items-end justify-between gap-2">
+          <div className="flex items-end justify-between gap-3">
             <div>
-              <p className="text-sm font-medium">Закрито по відомих балах</p>
+              <p className="text-sm font-medium">Зібрано балів</p>
               <p className="text-xs text-muted-foreground">
-                {completedKnownScore}/{knownMaxScore} балів зараз позначено як виконано.
+                ЛР {sumEnteredScores(scores, "lab")}/{sumMaxScores("lab")} · ПЧ{" "}
+                {sumEnteredScores(scores, "exam-practical")}/{getExamPracticalScore()} · УЧ{" "}
+                {sumEnteredScores(scores, "exam-oral")}/{getExamOralScore()}
               </p>
             </div>
-            <span className="font-mono text-sm tabular-nums text-muted-foreground">
-              {completedKnownProgress}%
-            </span>
+            <span className="font-mono text-sm tabular-nums text-muted-foreground">{progress}%</span>
           </div>
-          <ProgressBar value={completedKnownProgress} showLabel />
+          <ProgressBar value={progress} showLabel />
         </div>
       </NotebookSection>
 
       {upcoming.length > 0 && (
-        <NotebookSection title="Nearest deadlines">
+        <NotebookSection title="Nearest score deadlines">
           <div className="grid gap-3 md:grid-cols-2">
             {upcoming.map(({ assessment, band }) => (
               <div key={`${assessment.shortTitle}-${band.score}-${band.date}`} className="border-b border-border pb-3">
@@ -115,125 +143,358 @@ export default function UniversityPage() {
       )}
 
       <NotebookSection title="Subjects">
-        <div className="hidden overflow-x-auto md:block">
-          <table className="w-full border-collapse text-sm">
-            <thead>
-              <tr className="border-b border-border text-left text-xs text-muted-foreground">
-                <th className="py-2 pr-4 font-medium">Предмет</th>
-                <th className="py-2 pr-4 font-medium">ПР</th>
-                <th className="py-2 pr-4 font-medium">ЛР</th>
-                <th className="py-2 pr-4 font-medium">ПЧ</th>
-                <th className="py-2 pr-4 font-medium">УЧ</th>
-                <th className="py-2 text-right font-medium">Відомі бали</th>
-              </tr>
-            </thead>
-            <tbody>
-              {universitySubjects.map((subject) => {
-                const score = subject.assessments.reduce((sum, item) => sum + item.maxScore, 0);
-                return (
-                  <tr key={subject.name} className="border-b border-border last:border-b-0">
-                    <td className="py-3 pr-4 font-medium">{subject.name}</td>
-                    <td className="py-3 pr-4 text-muted-foreground">{subject.practical || "-"}</td>
-                    <td className="py-3 pr-4 text-muted-foreground">{subject.labs || "-"}</td>
-                    <td className="py-3 pr-4 text-muted-foreground">{subject.writtenExam || "-"}</td>
-                    <td className="py-3 pr-4 text-muted-foreground">{subject.oralExam || "-"}</td>
-                    <td className="py-3 text-right font-mono tabular-nums">{score || "?"}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="space-y-4 md:hidden">
-          {universitySubjects.map((subject) => {
-            const score = subject.assessments.reduce((sum, item) => sum + item.maxScore, 0);
-            return (
-              <div key={subject.name} className="border-b border-border pb-4 last:border-b-0">
-                <div className="flex items-start justify-between gap-3">
-                  <p className="font-medium leading-snug">{subject.name}</p>
-                  <span className="font-mono text-sm tabular-nums">{score || "?"} б</span>
-                </div>
-                <p className="mt-2 text-xs text-muted-foreground">
-                  {[subject.practical, subject.labs, subject.writtenExam, subject.oralExam]
-                    .filter(Boolean)
-                    .join(" · ") || "Дані очікуються"}
-                </p>
-              </div>
-            );
-          })}
+        <div className="space-y-6">
+          {universitySubjects.map((subject) => (
+            <SubjectBlock
+              key={subject.name}
+              subject={subject}
+              scores={scores}
+              onWorkOpen={(assessment) => setSelectedWork({ subject, assessment })}
+              onMoreOpen={() => setSelectedSubject({ subject })}
+            />
+          ))}
         </div>
       </NotebookSection>
 
-      {smartTech && (
-        <NotebookSection title={SMART_TECH_SUBJECT}>
-          <div className="mb-5 grid gap-x-8 gap-y-2 sm:grid-cols-3">
-            <Metric label="Лабораторні" value={`${getLabMaxScore()} б`} hint="5 робіт по 8 балів" />
-            <Metric label="ПЧ" value={`${getExamPracticalScore()} б`} hint="Практична частина екзамену" />
-            <Metric label="УЧ" value={`${getExamOralScore()} б`} hint="Усна частина екзамену" />
+      <WorkDialog
+        selection={selectedWork}
+        scores={scores}
+        onSave={saveScore}
+        onOpenChange={(open) => !open && setSelectedWork(null)}
+      />
+
+      <SubjectTotalsDialog
+        selection={selectedSubject}
+        scores={scores}
+        onOpenChange={(open) => !open && setSelectedSubject(null)}
+      />
+    </div>
+  );
+}
+
+function SubjectBlock({
+  subject,
+  scores,
+  onWorkOpen,
+  onMoreOpen,
+}: {
+  subject: UniversitySubject;
+  scores: UniversityScores;
+  onWorkOpen: (assessment: UniversityAssessment) => void;
+  onMoreOpen: () => void;
+}) {
+  const maxScore = subject.assessments.reduce((sum, assessment) => sum + assessment.maxScore, 0);
+  const enteredScore = subject.assessments.reduce(
+    (sum, assessment) => sum + (getEnteredScore(scores, subject.name, assessment.title) ?? 0),
+    0,
+  );
+  const progress = maxScore ? Math.round((enteredScore / maxScore) * 100) : 0;
+
+  return (
+    <section className="border-b border-border pb-5 last:border-b-0">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <h2 className="font-heading text-base font-medium">{subject.name}</h2>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {[subject.practical, subject.labs, subject.writtenExam, subject.oralExam]
+              .filter(Boolean)
+              .join(" · ") || "Дані по роботах очікуються"}
+          </p>
+        </div>
+        <Button variant="ghost" size="icon-sm" onClick={onMoreOpen} aria-label={`More about ${subject.name}`}>
+          <MoreHorizontal className="size-4" />
+        </Button>
+      </div>
+
+      {maxScore > 0 && (
+        <div className="mb-4">
+          <div className="mb-1 flex justify-between gap-3 font-mono text-xs tabular-nums text-muted-foreground">
+            <span>{enteredScore}/{maxScore} б</span>
+            <span>{progress}%</span>
           </div>
-
-          <div className="space-y-4">
-            {smartTech.assessments.map((assessment) => {
-              const status = findStepStatus(data, SMART_TECH_SUBJECT, assessment.title);
-              const nextBand = getNextBand(assessment);
-              const currentScore =
-                assessment.type === "pending" ? 0 : getCurrentAssessmentScore(assessment);
-              return (
-                <div key={assessment.title} className="border-b border-border pb-4 last:border-b-0">
-                  <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-                    <div className="min-w-0">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <p className="font-medium">{assessment.title}</p>
-                        <Badge variant={status === "COMPLETED" ? "secondary" : "outline"}>
-                          {status ? statusLabels[status] : "Не засіяно"}
-                        </Badge>
-                      </div>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {assessment.maxScore} max · {currentScore} доступно зараз
-                      </p>
-                    </div>
-                    {nextBand && (
-                      <p className="flex shrink-0 items-center gap-1.5 font-mono text-xs tabular-nums text-muted-foreground">
-                        <CalendarDays className="size-4" />
-                        {nextBand.score} б до {formatDateUk(nextBand.date)}
-                      </p>
-                    )}
-                  </div>
-
-                  {assessment.bands ? (
-                    <div className="mt-3 flex flex-wrap gap-1.5">
-                      {assessment.bands.map((band) => (
-                        <span
-                          key={`${assessment.title}-${band.score}-${band.date}`}
-                          className={cn(
-                            "inline-flex rounded-md border px-2 py-1 text-xs text-muted-foreground",
-                            band === nextBand && "border-foreground text-foreground",
-                          )}
-                        >
-                          {formatScoreBand(band)}
-                        </span>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="mt-3 flex items-center gap-1.5 text-sm text-muted-foreground">
-                      <ClipboardCheck className="size-4" />
-                      Фіксована екзаменаційна частина без дедлайну в наданих файлах.
-                    </p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </NotebookSection>
-      )}
-
-      {!project && (
-        <div className="border border-dashed border-border px-5 py-6 text-sm text-muted-foreground">
-          <GraduationCap className="mb-3 size-5" />
-          University roadmap ще не знайдено в завантажених даних.
+          <ProgressBar value={progress} />
         </div>
       )}
+
+      <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+        {subject.assessments.map((assessment) => {
+          const entered = getEnteredScore(scores, subject.name, assessment.title);
+          const currentMax =
+            assessment.type === "pending" ? null : getCurrentAssessmentScore(assessment, statusToday);
+          const nextBand = getNextBand(assessment, statusToday);
+
+          return (
+            <button
+              key={assessment.title}
+              type="button"
+              onClick={() => onWorkOpen(assessment)}
+              className="min-h-24 rounded-lg border border-border bg-background px-3 py-3 text-left transition-colors hover:bg-muted/60"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <span className="font-medium leading-snug">{assessment.shortTitle}</span>
+                <Badge variant={entered === null ? "outline" : "secondary"}>
+                  {entered === null ? "todo" : `${entered} б`}
+                </Badge>
+              </div>
+              <p className="mt-2 text-sm leading-snug text-muted-foreground">{assessment.title}</p>
+              <p className="mt-2 font-mono text-xs tabular-nums text-muted-foreground">
+                {assessment.maxScore > 0 ? `max ${assessment.maxScore} · now ${currentMax}` : "уточнити"}
+              </p>
+              {nextBand && (
+                <p className="mt-1 font-mono text-xs tabular-nums text-muted-foreground">
+                  {nextBand.score} б до {formatDateUk(nextBand.date)}
+                </p>
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function WorkDialog({
+  selection,
+  scores,
+  onSave,
+  onOpenChange,
+}: {
+  selection: WorkSelection | null;
+  scores: UniversityScores;
+  onSave: (subject: UniversitySubject, assessment: UniversityAssessment, score: number) => void;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const assessment = selection?.assessment;
+  const subject = selection?.subject;
+  const currentMax = assessment ? getCurrentAssessmentScore(assessment, statusToday) : 0;
+  const firstBand = assessment?.bands?.[0] ?? null;
+  const secondBand = assessment?.bands?.[1] ?? null;
+
+  return (
+    <Dialog open={Boolean(selection)} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-lg">
+        {selection && assessment && subject && (
+          <>
+            <DialogHeader>
+              <DialogTitle>{assessment.title}</DialogTitle>
+              <DialogDescription>{subject.name}</DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-5">
+              <div className="grid gap-x-6 gap-y-2 sm:grid-cols-3">
+                <Metric label="Максимум" value={`${assessment.maxScore} б`} hint="за роботу" />
+                <Metric label="Доступно зараз" value={`${currentMax} б`} hint="по дедлайнах" />
+                <Metric
+                  label="Мій бал"
+                  value={`${getEnteredScore(scores, subject.name, assessment.title) ?? 0} б`}
+                  hint="збережено"
+                />
+              </div>
+
+              {assessment.bands && (
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {firstBand && <DeadlineNote title="Перший дедлайн" band={firstBand} />}
+                  {secondBand && <DeadlineNote title="Другий дедлайн" band={secondBand} />}
+                </div>
+              )}
+
+              {assessment.bands ? (
+                <div>
+                  <p className="mb-2 text-xs font-medium text-muted-foreground">Таблиця дедлайнів</p>
+                  <div className="grid gap-1.5 sm:grid-cols-2">
+                    {assessment.bands.map((band) => (
+                      <span
+                        key={`${band.score}-${band.date}`}
+                        className="rounded-md border border-border px-2 py-1 text-xs text-muted-foreground"
+                      >
+                        {formatScoreBand(band)}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p className="flex items-start gap-2 text-sm text-muted-foreground">
+                  <Info className="mt-0.5 size-4 shrink-0" />
+                  Для цієї роботи в наданих файлах немає окремого дедлайну. Максимальний бал фіксований.
+                </p>
+              )}
+
+              <ScoreForm
+                key={getAssessmentKey(subject.name, assessment.title)}
+                subject={subject}
+                assessment={assessment}
+                scores={scores}
+                currentMax={currentMax}
+                onSave={onSave}
+                onOpenChange={onOpenChange}
+              />
+            </div>
+          </>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function ScoreForm({
+  subject,
+  assessment,
+  scores,
+  currentMax,
+  onSave,
+  onOpenChange,
+}: {
+  subject: UniversitySubject;
+  assessment: UniversityAssessment;
+  scores: UniversityScores;
+  currentMax: number;
+  onSave: (subject: UniversitySubject, assessment: UniversityAssessment, score: number) => void;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const entered = getEnteredScore(scores, subject.name, assessment.title);
+  const [input, setInput] = useState(entered === null ? "" : String(entered));
+  const enteredScore = Number(input);
+  const inputIsValid =
+    assessment.type !== "pending" &&
+    Number.isFinite(enteredScore) &&
+    enteredScore >= 0 &&
+    enteredScore <= assessment.maxScore;
+
+  if (assessment.type === "pending") {
+    return (
+      <p className="text-sm text-muted-foreground">
+        Для цього предмету ще треба додати конкретні роботи, дедлайни та бали.
+      </p>
+    );
+  }
+
+  return (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="university-score">Реальний бал</Label>
+        <Input
+          id="university-score"
+          type="number"
+          min={0}
+          max={assessment.maxScore}
+          step={1}
+          value={input}
+          onChange={(event) => setInput(event.target.value)}
+          placeholder={`0-${assessment.maxScore}`}
+        />
+        <p className="text-xs text-muted-foreground">
+          Автоматичний максимум на сьогодні: {currentMax} {scoreWord(currentMax)}. Поле приймає фактичний виставлений бал
+          до {assessment.maxScore}.
+        </p>
+      </div>
+
+      <DialogFooter>
+        <Button
+          disabled={!inputIsValid}
+          onClick={() => {
+            onSave(subject, assessment, enteredScore);
+            onOpenChange(false);
+          }}
+        >
+          <Save className="size-4" />
+          Save
+        </Button>
+      </DialogFooter>
+    </>
+  );
+}
+
+function SubjectTotalsDialog({
+  selection,
+  scores,
+  onOpenChange,
+}: {
+  selection: SubjectSelection | null;
+  scores: UniversityScores;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const subject = selection?.subject;
+
+  const totals = useMemo(() => {
+    if (!subject) return { labs: 0, labsMax: 0, practical: 0, practicalMax: 0, oral: 0, oralMax: 0 };
+
+    return subject.assessments.reduce(
+      (acc, assessment) => {
+        const score = getEnteredScore(scores, subject.name, assessment.title) ?? 0;
+        if (assessment.type === "lab") {
+          acc.labs += score;
+          acc.labsMax += assessment.maxScore;
+        }
+        if (assessment.type === "exam-practical") {
+          acc.practical += score;
+          acc.practicalMax += assessment.maxScore;
+        }
+        if (assessment.type === "exam-oral") {
+          acc.oral += score;
+          acc.oralMax += assessment.maxScore;
+        }
+        return acc;
+      },
+      { labs: 0, labsMax: 0, practical: 0, practicalMax: 0, oral: 0, oralMax: 0 },
+    );
+  }, [scores, subject]);
+
+  const total = totals.labs + totals.practical + totals.oral;
+  const maxTotal = totals.labsMax + totals.practicalMax + totals.oralMax;
+
+  return (
+    <Dialog open={Boolean(selection)} onOpenChange={onOpenChange}>
+      <DialogContent>
+        {subject && (
+          <>
+            <DialogHeader>
+              <DialogTitle>{subject.name}</DialogTitle>
+              <DialogDescription>Сумарний бал по відомих роботах предмету.</DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-3">
+              <TotalRow label="ЛР" value={totals.labs} max={totals.labsMax} />
+              <TotalRow label="ПЧ" value={totals.practical} max={totals.practicalMax} />
+              <TotalRow label="УЧ" value={totals.oral} max={totals.oralMax} />
+              <div className="border-t border-border pt-3">
+                <TotalRow label="Разом" value={total} max={maxTotal} strong />
+              </div>
+            </div>
+          </>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function DeadlineNote({ title, band }: { title: string; band: { score: number; date: string } }) {
+  return (
+    <div className="border-b border-border pb-2">
+      <p className="text-xs text-muted-foreground">{title}</p>
+      <p className="mt-1 font-mono text-sm tabular-nums">
+        {band.score} б до {formatDateUk(band.date)}
+      </p>
+    </div>
+  );
+}
+
+function TotalRow({
+  label,
+  value,
+  max,
+  strong,
+}: {
+  label: string;
+  value: number;
+  max: number;
+  strong?: boolean;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4">
+      <span className={strong ? "font-medium" : "text-muted-foreground"}>{label}</span>
+      <span className="font-mono tabular-nums">
+        {value}/{max}
+      </span>
     </div>
   );
 }
