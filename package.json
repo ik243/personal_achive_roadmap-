@@ -9,6 +9,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "generate:curriculum": "node scripts/generate-curriculum.mjs",
+    "seed:university": "node scripts/seed-university.mjs",
     "test:watch": "vitest"
   },
   "dependencies": {
