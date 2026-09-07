@@ -8,7 +8,9 @@ import { ProjectHeader } from "@/components/project/project-header";
 import { RoadmapView } from "@/components/project/roadmap-view";
 import { StatsView } from "@/components/project/stats-view";
 import { StepDetailSheet } from "@/components/project/step-detail-sheet";
+import { UniversityTracker } from "@/components/university/university-tracker";
 import { enrichProject } from "@/lib/domain/aggregate";
+import { UNIVERSITY_PROJECT_TITLE } from "@/lib/university/data";
 import { useAppData } from "@/providers/app-data-provider";
 
 export default function ProjectPage() {
@@ -32,22 +34,30 @@ export default function ProjectPage() {
     );
   }
 
+  const isUniversityProject = project.title === UNIVERSITY_PROJECT_TITLE;
+
   return (
     <div className="space-y-6">
       <ProjectHeader project={project} />
 
       <Tabs value={view} onValueChange={setView} className="space-y-6">
         <TabsList className="h-10 w-full justify-start sm:w-auto">
-          <TabsTrigger value="roadmap" className="px-4">Roadmap</TabsTrigger>
+          <TabsTrigger value="roadmap" className="px-4">
+            {isUniversityProject ? "Tracker" : "Roadmap"}
+          </TabsTrigger>
           <TabsTrigger value="manage" className="px-4">Manage</TabsTrigger>
           <TabsTrigger value="stats" className="px-4">Stats</TabsTrigger>
         </TabsList>
 
         <TabsContent value="roadmap" className="mt-0">
-          <RoadmapView
-            projectId={projectId}
-            onSelectStep={setSelectedStepId}
-          />
+          {isUniversityProject ? (
+            <UniversityTracker showHeader={false} />
+          ) : (
+            <RoadmapView
+              projectId={projectId}
+              onSelectStep={setSelectedStepId}
+            />
+          )}
         </TabsContent>
         <TabsContent value="manage" className="mt-0">
           <ManageView projectId={projectId} onSelectStep={setSelectedStepId} />
