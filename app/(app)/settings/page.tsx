@@ -4,7 +4,6 @@ import { useTheme } from "next-themes";
 import { PageHeader } from "@/components/layout/page-header";
 import { NotebookSection } from "@/components/layout/notebook-section";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import type { ThemePreference } from "@/lib/domain/types";
 import { isSupabaseEnabled } from "@/lib/supabase/client";
 import { useAppData } from "@/providers/app-data-provider";

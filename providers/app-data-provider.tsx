@@ -85,7 +85,6 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<AppSettings>({ theme: "system" });
   const [isReady, setIsReady] = useState(false);
 
-  /* eslint-disable react-hooks/set-state-in-effect -- hydrate from storage on mount */
   useEffect(() => {
     async function hydrate() {
       if (isSupabaseEnabled()) {
@@ -125,7 +124,6 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
 
     hydrate();
   }, []);
-  /* eslint-enable react-hooks/set-state-in-effect */
 
   const syncToSupabase = useCallback(async (next: AppData) => {
     if (!isSupabaseEnabled()) return;

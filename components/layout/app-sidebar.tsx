@@ -12,6 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 const mainNav = [
   { href: "/dashboard", label: "Dashboard" },
   { href: "/projects", label: "Projects" },
+  { href: "/university", label: "University" },
   { href: "/activity", label: "Activity" },
 ];
 

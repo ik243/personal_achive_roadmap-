@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Plus } from "lucide-react";
 import { PageHeader } from "@/components/layout/page-header";
 import { NotebookSection } from "@/components/layout/notebook-section";
 import { DurationText } from "@/components/shared/duration-text";

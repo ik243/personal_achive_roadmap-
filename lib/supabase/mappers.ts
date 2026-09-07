@@ -4,7 +4,6 @@ import type {
   Step,
   StepStatus,
   TimeLog,
-  AppData,
 } from "@/lib/domain/types";
 
 type ProjectRow = {
