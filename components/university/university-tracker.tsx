@@ -7,7 +7,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { NotebookSection } from "@/components/layout/notebook-section";
 import { ProgressBar } from "@/components/shared/progress-bar";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants, Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -29,16 +29,14 @@ import {
   getExamOralScore,
   getExamPracticalScore,
   getKnownMaxScore,
-  getNextBand,
   getUpcomingDeadlines,
   scoreWord,
   SMART_TECH_SUBJECT,
-  sumEnteredScores,
-  sumMaxScores,
   type UniversityAssessment,
   type UniversityScores,
   type UniversitySubject,
   universitySubjects,
+  sumEnteredScores,
 } from "@/lib/university/data";
 import { readUniversityScores, writeUniversityScores } from "@/lib/university/storage";
 import { useAppData } from "@/providers/app-data-provider";
@@ -57,14 +55,13 @@ const statusToday = new Date();
 export function UniversityTracker({ showHeader = true }: { showHeader?: boolean }) {
   const { data, isReady } = useAppData();
   const [scores, setScores] = useState<UniversityScores>(() => readUniversityScores());
+  const [overviewOpen, setOverviewOpen] = useState(false);
   const [selectedWork, setSelectedWork] = useState<WorkSelection | null>(null);
   const [selectedSubject, setSelectedSubject] = useState<SubjectSelection | null>(null);
 
   const project = findUniversityProject(data);
-  const upcoming = getUpcomingDeadlines(statusToday, 5);
   const knownMax = getKnownMaxScore();
   const enteredTotal = sumEnteredScores(scores);
-  const currentPossible = getCurrentPossibleScore(statusToday);
   const progress = knownMax ? Math.round((enteredTotal / knownMax) * 100) : 0;
 
   if (!isReady) return null;
@@ -82,11 +79,11 @@ export function UniversityTracker({ showHeader = true }: { showHeader?: boolean 
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {showHeader && (
         <PageHeader
           title="University"
-          description="Предмети, роботи, дедлайни та реальні бали в одному місці."
+          description="Предмети, роботи і бали без зайвого шуму."
           actions={
             project && (
               <Link href={`/projects/${project.id}`} className={buttonVariants({ variant: "outline", size: "sm" })}>
@@ -98,54 +95,26 @@ export function UniversityTracker({ showHeader = true }: { showHeader?: boolean 
         />
       )}
 
-      <div className="grid gap-x-8 gap-y-2 sm:grid-cols-2 lg:grid-cols-4">
-        <Metric label="Мій результат" value={`${enteredTotal}/${knownMax}`} hint="введені реальні бали" />
-        <Metric label="Можливо зараз" value={`${currentPossible}/${knownMax}`} hint="автоматично по дедлайнах" />
-        <Metric label="ПЧ" value={`${getExamPracticalScore()} б`} hint="практична частина екзамену" />
-        <Metric label="УЧ" value={`${getExamOralScore()} б`} hint="усна частина екзамену" />
+      <div className="border-b border-border pb-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
+            <p className="font-heading text-base font-medium">Мій результат</p>
+            <p className="mt-1 font-mono text-sm tabular-nums text-muted-foreground">
+              {enteredTotal}/{knownMax} б
+            </p>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => setOverviewOpen(true)}>
+            <MoreHorizontal className="size-4" />
+            More
+          </Button>
+        </div>
+        <div className="mt-3 max-w-xl">
+          <ProgressBar value={progress} showLabel size="sm" />
+        </div>
       </div>
 
-      <NotebookSection title="Score progress">
-        <div className="space-y-3">
-          <div className="flex items-end justify-between gap-3">
-            <div>
-              <p className="text-sm font-medium">Зібрано балів</p>
-              <p className="text-xs text-muted-foreground">
-                ЛР {sumEnteredScores(scores, "lab")}/{sumMaxScores("lab")} · ПЧ{" "}
-                {sumEnteredScores(scores, "exam-practical")}/{getExamPracticalScore()} · УЧ{" "}
-                {sumEnteredScores(scores, "exam-oral")}/{getExamOralScore()}
-              </p>
-            </div>
-            <span className="font-mono text-sm tabular-nums text-muted-foreground">{progress}%</span>
-          </div>
-          <ProgressBar value={progress} showLabel />
-        </div>
-      </NotebookSection>
-
-      {upcoming.length > 0 && (
-        <NotebookSection title="Nearest score deadlines">
-          <div className="grid gap-3 md:grid-cols-2">
-            {upcoming.map(({ assessment, band }) => (
-              <div key={`${assessment.shortTitle}-${band.score}-${band.date}`} className="border-b border-border pb-3">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="font-medium">{assessment.title}</p>
-                    <p className="text-xs text-muted-foreground">{SMART_TECH_SUBJECT}</p>
-                  </div>
-                  <Badge variant="outline">{band.score} б</Badge>
-                </div>
-                <p className="mt-2 flex items-center gap-1.5 text-sm text-muted-foreground">
-                  <CalendarDays className="size-4" />
-                  до {formatDateUk(band.date)}
-                </p>
-              </div>
-            ))}
-          </div>
-        </NotebookSection>
-      )}
-
       <NotebookSection title="Subjects">
-        <div className="space-y-6">
+        <div className="space-y-5">
           {universitySubjects.map((subject) => (
             <SubjectBlock
               key={subject.name}
@@ -157,6 +126,8 @@ export function UniversityTracker({ showHeader = true }: { showHeader?: boolean 
           ))}
         </div>
       </NotebookSection>
+
+      <OverviewDialog open={overviewOpen} scores={scores} onOpenChange={setOverviewOpen} />
 
       <WorkDialog
         selection={selectedWork}
@@ -194,13 +165,11 @@ function SubjectBlock({
 
   return (
     <section className="border-b border-border pb-5 last:border-b-0">
-      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+      <div className="mb-3 flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h2 className="font-heading text-base font-medium">{subject.name}</h2>
-          <p className="mt-1 text-xs text-muted-foreground">
-            {[subject.practical, subject.labs, subject.writtenExam, subject.oralExam]
-              .filter(Boolean)
-              .join(" · ") || "Дані по роботах очікуються"}
+          <p className="mt-1 font-mono text-xs tabular-nums text-muted-foreground">
+            {maxScore > 0 ? `${enteredScore}/${maxScore} б` : "todo"}
           </p>
         </div>
         <Button variant="ghost" size="icon-sm" onClick={onMoreOpen} aria-label={`More about ${subject.name}`}>
@@ -209,51 +178,93 @@ function SubjectBlock({
       </div>
 
       {maxScore > 0 && (
-        <div className="mb-4">
-          <div className="mb-1 flex justify-between gap-3 font-mono text-xs tabular-nums text-muted-foreground">
-            <span>{enteredScore}/{maxScore} б</span>
-            <span>{progress}%</span>
-          </div>
-          <ProgressBar value={progress} />
+        <div className="mb-3 max-w-xl">
+          <ProgressBar value={progress} size="sm" />
         </div>
       )}
 
-      <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
         {subject.assessments.map((assessment) => {
           const entered = getEnteredScore(scores, subject.name, assessment.title);
-          const currentMax =
-            assessment.type === "pending" ? null : getCurrentAssessmentScore(assessment, statusToday);
-          const nextBand = getNextBand(assessment, statusToday);
 
           return (
-            <div
-              key={assessment.title}
-              className="min-h-28 rounded-lg border border-border bg-background px-3 py-3"
-            >
+            <div key={assessment.title} className="rounded-lg border border-border bg-background px-3 py-3">
               <div className="flex items-start justify-between gap-3">
-                <span className="font-medium leading-snug">{assessment.shortTitle}</span>
+                <div className="min-w-0">
+                  <p className="font-medium leading-snug">{assessment.shortTitle}</p>
+                  <p className="mt-1 font-mono text-xs tabular-nums text-muted-foreground">
+                    {assessment.maxScore > 0 ? `max ${assessment.maxScore}` : "уточнити"}
+                  </p>
+                </div>
                 <Badge variant={entered === null ? "outline" : "secondary"}>
                   {entered === null ? "todo" : `${entered} б`}
                 </Badge>
               </div>
-              <p className="mt-2 text-sm leading-snug text-muted-foreground">{assessment.title}</p>
-              <p className="mt-2 font-mono text-xs tabular-nums text-muted-foreground">
-                {assessment.maxScore > 0 ? `max ${assessment.maxScore} · now ${currentMax}` : "уточнити"}
-              </p>
-              <div className="mt-3 flex items-center justify-between gap-2">
-                <span className="min-w-0 font-mono text-xs tabular-nums text-muted-foreground">
-                  {nextBand ? `${nextBand.score} б до ${formatDateUk(nextBand.date)}` : "без окремого дедлайну"}
-                </span>
-                <Button variant="outline" size="sm" onClick={() => onWorkOpen(assessment)}>
-                  <Info className="size-3.5" />
-                  More
-                </Button>
-              </div>
+              <Button className="mt-3 w-full" variant="outline" size="sm" onClick={() => onWorkOpen(assessment)}>
+                <Info className="size-3.5" />
+                More
+              </Button>
             </div>
           );
         })}
       </div>
     </section>
+  );
+}
+
+function OverviewDialog({
+  open,
+  scores,
+  onOpenChange,
+}: {
+  open: boolean;
+  scores: UniversityScores;
+  onOpenChange: (open: boolean) => void;
+}) {
+  const knownMax = getKnownMaxScore();
+  const enteredTotal = sumEnteredScores(scores);
+  const currentPossible = getCurrentPossibleScore(statusToday);
+  const upcoming = getUpcomingDeadlines(statusToday, 5);
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[min(90vh,720px)] overflow-y-auto sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>University overview</DialogTitle>
+          <DialogDescription>Загальна оцінка і найближчі дедлайни.</DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-5">
+          <div className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
+            <Metric label="Мій результат" value={`${enteredTotal}/${knownMax}`} hint="введені реальні бали" />
+            <Metric label="Можливо зараз" value={`${currentPossible}/${knownMax}`} hint="автоматично по дедлайнах" />
+            <Metric label="ПЧ" value={`${getExamPracticalScore()} б`} hint="практична частина екзамену" />
+            <Metric label="УЧ" value={`${getExamOralScore()} б`} hint="усна частина екзамену" />
+          </div>
+
+          <div>
+            <p className="mb-2 text-xs font-medium text-muted-foreground">Найближчі дедлайни</p>
+            <div className="space-y-2">
+              {upcoming.map(({ assessment, band }) => (
+                <div key={`${assessment.shortTitle}-${band.score}-${band.date}`} className="border-b border-border pb-2">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-medium">{assessment.shortTitle}</p>
+                      <p className="text-xs text-muted-foreground">{SMART_TECH_SUBJECT}</p>
+                    </div>
+                    <Badge variant="outline">{band.score} б</Badge>
+                  </div>
+                  <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <CalendarDays className="size-3.5" />
+                    до {formatDateUk(band.date)}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -319,7 +330,7 @@ function WorkDialog({
               ) : (
                 <p className="flex items-start gap-2 text-sm text-muted-foreground">
                   <Info className="mt-0.5 size-4 shrink-0" />
-                  Для цієї роботи в наданих файлах немає окремого дедлайну. Максимальний бал фіксований.
+                  Для цієї роботи в наданих файлах немає окремого дедлайну.
                 </p>
               )}
 
@@ -387,8 +398,7 @@ function ScoreForm({
           placeholder={`0-${assessment.maxScore}`}
         />
         <p className="text-xs text-muted-foreground">
-          Автоматичний максимум на сьогодні: {currentMax} {scoreWord(currentMax)}. Поле приймає фактичний виставлений бал
-          до {assessment.maxScore}.
+          Автоматичний максимум на сьогодні: {currentMax} {scoreWord(currentMax)}.
         </p>
       </div>
 
@@ -453,7 +463,7 @@ function SubjectTotalsDialog({
           <>
             <DialogHeader>
               <DialogTitle>{subject.name}</DialogTitle>
-              <DialogDescription>Сумарний бал по відомих роботах предмету.</DialogDescription>
+              <DialogDescription>Сумарний бал по роботах предмету.</DialogDescription>
             </DialogHeader>
 
             <div className="space-y-3">
